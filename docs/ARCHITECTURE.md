@@ -10,7 +10,7 @@
 | Wallet | User signing | The application may collect seed phrases |
 | Resolver service | Evidence assessment and authorized settlement decisions | Reviewer assignment in the database changes on-chain roles |
 
-Frontend hosting is intended to use Vercel. Other hosting and frameworks are undecided. Verify hosting-plan compatibility with private organization repositories before deployment.
+Frontend hosting is intended to use Vercel. A local NestJS/TypeScript API and PostgreSQL workspace now exist; backend hosting remains undecided. Verify hosting-plan compatibility with private organization repositories before deployment.
 
 ## Proposed records
 
@@ -20,7 +20,7 @@ Every escrow reference must include the network, contract ID, verified asset ide
 
 ## Interface contracts to define
 
-Agree on an OpenAPI specification for private application APIs and explicit schemas for transaction intents, chain status, errors, and events before implementation. No route names or payload shapes in this document are implemented commitments.
+The implemented account/project API is described in [OpenAPI](openapi.json) and [API notes](API.md). Transaction intents, chain status, errors and event schemas for payments remain to be specified. The current API has no payment endpoints.
 
 Financial intents must identify actor, project/milestone, expected agreement version, network, asset, gross amount, fees, recipient/contract, and an idempotency identifier. Reconcile unknown transaction outcomes before retrying. Reject stale agreement versions and network/asset mismatches.
 

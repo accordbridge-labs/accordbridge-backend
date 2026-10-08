@@ -1,0 +1,1263 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "AccordBridge workspace API",
+    "version": "0.1.0",
+    "description": "Development workspace. No payment endpoints. Sessions use HttpOnly cookies; unsafe requests require an exact allowed Origin and X-AccordBridge-Request: 1."
+  },
+  "servers": [
+    {
+      "url": "http://127.0.0.1:4000/api"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "session": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "accordbridge_session"
+      }
+    },
+    "schemas": {
+      "Register": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "email": {
+            "type": "string",
+            "maxLength": 254,
+            "format": "email",
+            "pattern": "^(?:[A-Za-z0-9_'+\\-]+\\.)*[A-Za-z0-9_'+\\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+          },
+          "password": {
+            "type": "string",
+            "minLength": 12,
+            "maxLength": 128
+          }
+        },
+        "required": [
+          "name",
+          "email",
+          "password"
+        ],
+        "additionalProperties": false
+      },
+      "Login": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "maxLength": 254,
+            "format": "email",
+            "pattern": "^(?:[A-Za-z0-9_'+\\-]+\\.)*[A-Za-z0-9_'+\\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+          },
+          "password": {
+            "type": "string",
+            "minLength": 12,
+            "maxLength": 128
+          }
+        },
+        "required": [
+          "email",
+          "password"
+        ],
+        "additionalProperties": false
+      },
+      "CreateProject": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "counterpartyId": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "client",
+              "freelancer"
+            ]
+          },
+          "agreement": {
+            "type": "object",
+            "properties": {
+              "title": {
+                "type": "string",
+                "maxLength": 100
+              },
+              "description": {
+                "type": "string",
+                "maxLength": 2000
+              },
+              "exclusions": {
+                "type": "string",
+                "maxLength": 2000
+              },
+              "revisions": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 10
+              },
+              "reviewDays": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 30
+              },
+              "milestones": {
+                "minItems": 1,
+                "maxItems": 10,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "maxLength": 100
+                    },
+                    "amount": {
+                      "type": "string",
+                      "maxLength": 30
+                    },
+                    "scope": {
+                      "type": "string",
+                      "maxLength": 2000
+                    },
+                    "criteria": {
+                      "type": "string",
+                      "maxLength": 2000
+                    },
+                    "dueDate": {
+                      "type": "string",
+                      "maxLength": 10
+                    }
+                  },
+                  "required": [
+                    "name",
+                    "amount",
+                    "scope",
+                    "criteria",
+                    "dueDate"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            },
+            "required": [
+              "title",
+              "description",
+              "exclusions",
+              "revisions",
+              "reviewDays",
+              "milestones"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "counterpartyId",
+          "role",
+          "agreement"
+        ],
+        "additionalProperties": false
+      },
+      "SaveDraft": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "agreement": {
+            "type": "object",
+            "properties": {
+              "title": {
+                "type": "string",
+                "maxLength": 100
+              },
+              "description": {
+                "type": "string",
+                "maxLength": 2000
+              },
+              "exclusions": {
+                "type": "string",
+                "maxLength": 2000
+              },
+              "revisions": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 10
+              },
+              "reviewDays": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 30
+              },
+              "milestones": {
+                "minItems": 1,
+                "maxItems": 10,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "maxLength": 100
+                    },
+                    "amount": {
+                      "type": "string",
+                      "maxLength": 30
+                    },
+                    "scope": {
+                      "type": "string",
+                      "maxLength": 2000
+                    },
+                    "criteria": {
+                      "type": "string",
+                      "maxLength": 2000
+                    },
+                    "dueDate": {
+                      "type": "string",
+                      "maxLength": 10
+                    }
+                  },
+                  "required": [
+                    "name",
+                    "amount",
+                    "scope",
+                    "criteria",
+                    "dueDate"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            },
+            "required": [
+              "title",
+              "description",
+              "exclusions",
+              "revisions",
+              "reviewDays",
+              "milestones"
+            ],
+            "additionalProperties": false
+          },
+          "expectedVersion": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "expectedRevision": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          }
+        },
+        "required": [
+          "agreement",
+          "expectedVersion",
+          "expectedRevision"
+        ],
+        "additionalProperties": false
+      },
+      "Publish": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "expectedVersion": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "expectedRevision": {
+            "type": "integer",
+            "exclusiveMinimum": 0,
+            "maximum": 9007199254740991
+          }
+        },
+        "required": [
+          "expectedVersion",
+          "expectedRevision"
+        ],
+        "additionalProperties": false
+      },
+      "Accept": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "version": {
+            "type": "integer",
+            "exclusiveMinimum": 0,
+            "maximum": 9007199254740991
+          }
+        },
+        "required": [
+          "version"
+        ],
+        "additionalProperties": false
+      },
+      "Agreement": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "maxLength": 100
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 2000
+          },
+          "exclusions": {
+            "type": "string",
+            "maxLength": 2000
+          },
+          "revisions": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 10
+          },
+          "reviewDays": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 30
+          },
+          "milestones": {
+            "minItems": 1,
+            "maxItems": 10,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "maxLength": 100
+                },
+                "amount": {
+                  "type": "string",
+                  "maxLength": 30
+                },
+                "scope": {
+                  "type": "string",
+                  "maxLength": 2000
+                },
+                "criteria": {
+                  "type": "string",
+                  "maxLength": 2000
+                },
+                "dueDate": {
+                  "type": "string",
+                  "maxLength": 10
+                }
+              },
+              "required": [
+                "name",
+                "amount",
+                "scope",
+                "criteria",
+                "dueDate"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": [
+          "title",
+          "description",
+          "exclusions",
+          "revisions",
+          "reviewDays",
+          "milestones"
+        ],
+        "additionalProperties": false
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          }
+        }
+      },
+      "Project": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "currentVersion": {
+            "type": "integer"
+          },
+          "role": {
+            "enum": [
+              "client",
+              "freelancer"
+            ]
+          },
+          "fundingStarted": {
+            "type": "boolean"
+          },
+          "client": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              }
+            }
+          },
+          "freelancer": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              }
+            }
+          },
+          "versions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "version": {
+                  "type": "integer"
+                },
+                "agreement": {
+                  "$ref": "#/components/schemas/Agreement"
+                },
+                "publishedBy": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "publishedAt": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "acceptances": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "userId": {
+                        "type": "string",
+                        "format": "uuid"
+                      },
+                      "role": {
+                        "enum": [
+                          "client",
+                          "freelancer"
+                        ]
+                      },
+                      "acceptedAt": {
+                        "type": "string",
+                        "format": "date-time"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "draft": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "agreement": {
+                    "$ref": "#/components/schemas/Agreement"
+                  },
+                  "baseVersion": {
+                    "type": "integer"
+                  },
+                  "revision": {
+                    "type": "integer"
+                  },
+                  "updatedAt": {
+                    "type": "string",
+                    "format": "date-time"
+                  }
+                }
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "paths": {
+    "/health": {
+      "get": {
+        "summary": "Read database readiness",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "const": "ok"
+                    },
+                    "payments": {
+                      "const": "disabled"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid fields"
+          },
+          "401": {
+            "description": "Sign-in required"
+          },
+          "403": {
+            "description": "Origin/header or action forbidden"
+          },
+          "404": {
+            "description": "Record not found or not accessible"
+          },
+          "409": {
+            "description": "Stale version/draft, locked terms or duplicate account"
+          },
+          "429": {
+            "description": "Too many requests"
+          }
+        }
+      }
+    },
+    "/auth/register": {
+      "post": {
+        "summary": "Create an account and session",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Register"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Origin",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Must equal configured FRONTEND_ORIGIN"
+          },
+          {
+            "in": "header",
+            "name": "X-AccordBridge-Request",
+            "required": true,
+            "schema": {
+              "const": "1"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "user": {
+                      "$ref": "#/components/schemas/User"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid fields"
+          },
+          "401": {
+            "description": "Sign-in required"
+          },
+          "403": {
+            "description": "Origin/header or action forbidden"
+          },
+          "404": {
+            "description": "Record not found or not accessible"
+          },
+          "409": {
+            "description": "Stale version/draft, locked terms or duplicate account"
+          },
+          "429": {
+            "description": "Too many requests"
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "summary": "Sign in and rotate the browser session",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Login"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Origin",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Must equal configured FRONTEND_ORIGIN"
+          },
+          {
+            "in": "header",
+            "name": "X-AccordBridge-Request",
+            "required": true,
+            "schema": {
+              "const": "1"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "user": {
+                      "$ref": "#/components/schemas/User"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid fields"
+          },
+          "401": {
+            "description": "Sign-in required"
+          },
+          "403": {
+            "description": "Origin/header or action forbidden"
+          },
+          "404": {
+            "description": "Record not found or not accessible"
+          },
+          "409": {
+            "description": "Stale version/draft, locked terms or duplicate account"
+          },
+          "429": {
+            "description": "Too many requests"
+          }
+        }
+      }
+    },
+    "/auth/logout": {
+      "post": {
+        "summary": "Revoke session and clear cookie",
+        "security": [],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Origin",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Must equal configured FRONTEND_ORIGIN"
+          },
+          {
+            "in": "header",
+            "name": "X-AccordBridge-Request",
+            "required": true,
+            "schema": {
+              "const": "1"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": {
+                      "const": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid fields"
+          },
+          "401": {
+            "description": "Sign-in required"
+          },
+          "403": {
+            "description": "Origin/header or action forbidden"
+          },
+          "404": {
+            "description": "Record not found or not accessible"
+          },
+          "409": {
+            "description": "Stale version/draft, locked terms or duplicate account"
+          },
+          "429": {
+            "description": "Too many requests"
+          }
+        }
+      }
+    },
+    "/auth/me": {
+      "get": {
+        "summary": "Read the signed-in account",
+        "security": [
+          {
+            "session": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "user": {
+                      "$ref": "#/components/schemas/User"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid fields"
+          },
+          "401": {
+            "description": "Sign-in required"
+          },
+          "403": {
+            "description": "Origin/header or action forbidden"
+          },
+          "404": {
+            "description": "Record not found or not accessible"
+          },
+          "409": {
+            "description": "Stale version/draft, locked terms or duplicate account"
+          },
+          "429": {
+            "description": "Too many requests"
+          }
+        }
+      }
+    },
+    "/projects": {
+      "get": {
+        "summary": "List only projects this account participates in",
+        "security": [
+          {
+            "session": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "projects": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "title": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "draftTitle": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "currentVersion": {
+                            "type": "integer"
+                          },
+                          "role": {
+                            "type": "string"
+                          },
+                          "clientName": {
+                            "type": "string"
+                          },
+                          "freelancerName": {
+                            "type": "string"
+                          },
+                          "updatedAt": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid fields"
+          },
+          "401": {
+            "description": "Sign-in required"
+          },
+          "403": {
+            "description": "Origin/header or action forbidden"
+          },
+          "404": {
+            "description": "Record not found or not accessible"
+          },
+          "409": {
+            "description": "Stale version/draft, locked terms or duplicate account"
+          },
+          "429": {
+            "description": "Too many requests"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a project with an existing account and private draft",
+        "security": [
+          {
+            "session": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateProject"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Origin",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Must equal configured FRONTEND_ORIGIN"
+          },
+          {
+            "in": "header",
+            "name": "X-AccordBridge-Request",
+            "required": true,
+            "schema": {
+              "const": "1"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "format": "uuid"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid fields"
+          },
+          "401": {
+            "description": "Sign-in required"
+          },
+          "403": {
+            "description": "Origin/header or action forbidden"
+          },
+          "404": {
+            "description": "Record not found or not accessible"
+          },
+          "409": {
+            "description": "Stale version/draft, locked terms or duplicate account"
+          },
+          "429": {
+            "description": "Too many requests"
+          }
+        }
+      }
+    },
+    "/projects/{id}": {
+      "parameters": [
+        {
+          "in": "path",
+          "name": "id",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Read terms, versions, acceptances and only the caller’s private draft",
+        "security": [
+          {
+            "session": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Project"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid fields"
+          },
+          "401": {
+            "description": "Sign-in required"
+          },
+          "403": {
+            "description": "Origin/header or action forbidden"
+          },
+          "404": {
+            "description": "Record not found or not accessible"
+          },
+          "409": {
+            "description": "Stale version/draft, locked terms or duplicate account"
+          },
+          "429": {
+            "description": "Too many requests"
+          }
+        }
+      }
+    },
+    "/projects/{id}/draft": {
+      "parameters": [
+        {
+          "in": "path",
+          "name": "id",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "put": {
+        "summary": "Save private draft with optimistic concurrency",
+        "security": [
+          {
+            "session": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SaveDraft"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Origin",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Must equal configured FRONTEND_ORIGIN"
+          },
+          {
+            "in": "header",
+            "name": "X-AccordBridge-Request",
+            "required": true,
+            "schema": {
+              "const": "1"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "revision": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid fields"
+          },
+          "401": {
+            "description": "Sign-in required"
+          },
+          "403": {
+            "description": "Origin/header or action forbidden"
+          },
+          "404": {
+            "description": "Record not found or not accessible"
+          },
+          "409": {
+            "description": "Stale version/draft, locked terms or duplicate account"
+          },
+          "429": {
+            "description": "Too many requests"
+          }
+        }
+      }
+    },
+    "/projects/{id}/publish": {
+      "parameters": [
+        {
+          "in": "path",
+          "name": "id",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "post": {
+        "summary": "Validate and publish a saved draft as a new immutable version",
+        "security": [
+          {
+            "session": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Publish"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Origin",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Must equal configured FRONTEND_ORIGIN"
+          },
+          {
+            "in": "header",
+            "name": "X-AccordBridge-Request",
+            "required": true,
+            "schema": {
+              "const": "1"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "version": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid fields"
+          },
+          "401": {
+            "description": "Sign-in required"
+          },
+          "403": {
+            "description": "Origin/header or action forbidden"
+          },
+          "404": {
+            "description": "Record not found or not accessible"
+          },
+          "409": {
+            "description": "Stale version/draft, locked terms or duplicate account"
+          },
+          "429": {
+            "description": "Too many requests"
+          }
+        }
+      }
+    },
+    "/projects/{id}/accept": {
+      "parameters": [
+        {
+          "in": "path",
+          "name": "id",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "post": {
+        "summary": "Accept the current version as the authenticated participant",
+        "security": [
+          {
+            "session": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Accept"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Origin",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Must equal configured FRONTEND_ORIGIN"
+          },
+          {
+            "in": "header",
+            "name": "X-AccordBridge-Request",
+            "required": true,
+            "schema": {
+              "const": "1"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "version": {
+                      "type": "integer"
+                    },
+                    "role": {
+                      "type": "string"
+                    },
+                    "accepted": {
+                      "const": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid fields"
+          },
+          "401": {
+            "description": "Sign-in required"
+          },
+          "403": {
+            "description": "Origin/header or action forbidden"
+          },
+          "404": {
+            "description": "Record not found or not accessible"
+          },
+          "409": {
+            "description": "Stale version/draft, locked terms or duplicate account"
+          },
+          "429": {
+            "description": "Too many requests"
+          }
+        }
+      }
+    }
+  }
+}

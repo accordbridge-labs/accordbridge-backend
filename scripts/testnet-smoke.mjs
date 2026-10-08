@@ -170,27 +170,76 @@ try {
     funded.escrow.state.balanceBaseUnits !== "1500000000"
   )
     throw new Error("Confirmed funding did not reconcile");
-  const partialRefund = await action(client, "refund");
-  if (partialRefund.escrow.state.status !== 1)
-    throw new Error("One participant refunded unilaterally");
-  const refunded = await action(freelancer, "refund");
-  if (
-    refunded.escrow.state.status !== 3 ||
-    refunded.escrow.state.balanceBaseUnits !== "0"
-  )
-    throw new Error("Mutual refund did not reconcile");
+  const reviewFlow = process.argv.includes("--review-release");
+  let completed;
+  if (reviewFlow) {
+    const submit = async (expectedLatestId, notes) =>
+      (
+        await request(
+          `/projects/${projectId}/work/submissions`,
+          {
+            version: 1,
+            expectedLatestId,
+            notes,
+            links: ["https://example.test/synthetic-delivery"],
+          },
+          freelancer.cookie,
+        )
+      ).data.id;
+    const first = await submit(null, "Synthetic first delivery");
+    await request(
+      `/projects/${projectId}/work/reviews`,
+      {
+        submissionId: first,
+        decision: "revision_requested",
+        feedback: "Correct the agreed spacing",
+      },
+      client.cookie,
+    );
+    const revised = await submit(first, "Synthetic revised delivery");
+    await request(
+      `/projects/${projectId}/work/reviews`,
+      {
+        submissionId: revised,
+        decision: "approved",
+        feedback: "Meets the agreed criteria",
+      },
+      client.cookie,
+    );
+    completed = await action(client, "release");
+    if (
+      completed.escrow.state.status !== 2 ||
+      completed.escrow.state.balanceBaseUnits !== "0"
+    )
+      throw new Error("Approved work release did not reconcile");
+  } else {
+    const partialRefund = await action(client, "refund");
+    if (partialRefund.escrow.state.status !== 1)
+      throw new Error("One participant refunded unilaterally");
+    const refunded = await action(freelancer, "refund");
+    if (
+      refunded.escrow.state.status !== 3 ||
+      refunded.escrow.state.balanceBaseUnits !== "0"
+    )
+      throw new Error("Mutual refund did not reconcile");
+    completed = refunded;
+  }
   mkdirSync("docs/evidence", { recursive: true });
   writeFileSync(
-    "docs/evidence/testnet-api.json",
+    reviewFlow
+      ? "docs/evidence/testnet-work-review.json"
+      : "docs/evidence/testnet-api.json",
     JSON.stringify(
       {
         network: "testnet",
-        escrow: refunded.escrow.contractId,
+        escrow: completed.escrow.contractId,
         escrowWasmHash: manifest.escrowWasmHash,
         tokenContract: manifest.tokenContract,
         amountBaseUnits: "1500000000",
-        finalStatus: "refunded",
-        onePartyRefundDidNotMoveTokens: true,
+        finalStatus: reviewFlow ? "released" : "refunded",
+        ...(reviewFlow
+          ? { submissionRevisionAndApprovalRecorded: true }
+          : { onePartyRefundDidNotMoveTokens: true }),
         transactions: records,
         checkedAt: new Date().toISOString(),
       },
@@ -199,9 +248,7 @@ try {
     ) + "\n",
   );
   success = true;
-  console.log(
-    "Real-signature API flow funded and mutually refunded on testnet.",
-  );
+  console.log("Real-signature API flow completed and reconciled on testnet.");
 } finally {
   if (success) {
     if (projectId)

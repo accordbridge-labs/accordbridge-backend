@@ -1,0 +1,36 @@
+{
+  "network": "testnet",
+  "escrow": "CBQONIH3IQCH3OMPRYCL5WG64NKFNMHY47PN5E724Y2HVD6IVDOB2WH5",
+  "escrowWasmHash": "0d17ac8fb6495f2258d1707f72157b25f0fa7a4912a2c1691364b302267f86b9",
+  "tokenContract": "CDUMZP5TPU4GAMUL7MQOPJUO7M3HQ2VS6QXD33L6XA6Q4BH3FIRHL3P4",
+  "amountBaseUnits": "1500000000",
+  "finalStatus": "released",
+  "submissionRevisionAndApprovalRecorded": true,
+  "transactions": [
+    {
+      "action": "deploy",
+      "hash": "ba014da3eb1ee124ccd638bc5d395f76aaadaee68fd3aac1fefdac4f3d8078f5"
+    },
+    {
+      "action": "faucet",
+      "hash": "230becc53d6882d7455d6b948e608b946f2145331b82d3a128e37c1457af77d6"
+    },
+    {
+      "action": "accept",
+      "hash": "b3795890437074e2eb04fd9ef4852bd37ff8531f774a4e619807e6f75a01fa5a"
+    },
+    {
+      "action": "accept",
+      "hash": "a74a5de89c8794b6955333f99249608084d077dc7419f2811dd8519cb915eb25"
+    },
+    {
+      "action": "fund",
+      "hash": "a7e353fe57411508e6eecef9b1b0ee5806da77c6712a11a98d6f4614f68e8ae2"
+    },
+    {
+      "action": "release",
+      "hash": "ddc12d3f5303c36d59477f04a3f780b1e58fbf6d5410756a64bd85fc27ac5553"
+    }
+  ],
+  "checkedAt": "2026-10-08T21:52:45.656Z"
+}

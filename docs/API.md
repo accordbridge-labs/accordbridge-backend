@@ -39,3 +39,7 @@ All routes below require a session; mutations retain the same origin/header chec
 | POST /testnet/projects/:id/check | Reconciles the pending hash and verifies pinned code, immutable terms and held balance. Returns current project testnet status. |
 
 See [testnet limitations](TESTNET.md). RPC failures preserve pending intents; an unknown result cannot authorize a fresh payment.
+
+## Delivery and review
+
+The `/projects/:id/work` history, `/work/submissions`, and `/work/reviews` endpoints are documented in [WORK-REVIEW.md](WORK-REVIEW.md). App-managed release now requires approval of the latest submission.

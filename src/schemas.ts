@@ -96,3 +96,40 @@ export function parse<T>(schema: z.ZodType<T>, input: unknown): T {
   return result.data;
 }
 export type User = { id: string; name: string; email: string };
+
+const deliveryLink = z
+  .string()
+  .trim()
+  .max(2000)
+  .url()
+  .refine((value) => {
+    try {
+      const url = new URL(value);
+      return url.protocol === "https:" && !url.username && !url.password;
+    } catch {
+      return false;
+    }
+  }, "Use an HTTPS link without embedded credentials");
+export const submissionSchema = z
+  .object({
+    version: z.number().int().positive(),
+    expectedLatestId: z.string().uuid().nullable(),
+    notes: z.string().trim().min(1).max(5000),
+    links: z.array(deliveryLink).min(1).max(10),
+  })
+  .strict();
+export const reviewSchema = z
+  .object({
+    submissionId: z.string().uuid(),
+    decision: z.enum(["approved", "revision_requested"]),
+    feedback: z.string().trim().max(5000),
+  })
+  .strict()
+  .refine(
+    (value) =>
+      value.decision !== "revision_requested" || value.feedback.length > 0,
+    {
+      path: ["feedback"],
+      message: "Explain the required revisions against the agreed criteria",
+    },
+  );

@@ -364,6 +364,221 @@ test("testnet API permissions, signature proof and unknown-outcome protection (m
     assert.equal(consistent.status, 201);
     assert.equal(consistent.body.escrow.state.status, 1);
     assert.equal(consistent.body.escrow.state.ledger, 200);
+    const workPath = `/projects/${project}/work`;
+    const delivery = {
+      version: 1,
+      expectedLatestId: null as string | null,
+      notes: "First delivery",
+      links: ["https://example.test/design"],
+    };
+    assert.equal((await request(workPath, "GET", undefined)).status, 401);
+    const outsider = await request("/auth/register", "POST", {
+      name: "Outsider",
+      email: `${randomUUID()}@example.test`,
+      password: "testnet-api-test-password",
+    });
+    users.push(outsider.body.user.id);
+    assert.equal(
+      (await request(workPath, "GET", undefined, outsider.cookie)).status,
+      404,
+    );
+    assert.equal(
+      (await request(workPath + "/submissions", "POST", delivery, a.cookie))
+        .status,
+      403,
+    );
+    assert.equal(
+      (
+        await request(
+          workPath + "/submissions",
+          "POST",
+          { ...delivery, links: ["javascript:alert(1)"] },
+          b.cookie,
+        )
+      ).status,
+      400,
+    );
+    assert.equal(
+      (
+        await request(
+          `/testnet/projects/${project}/prepare`,
+          "POST",
+          { action: "release", version: 1 },
+          a.cookie,
+        )
+      ).status,
+      409,
+    );
+    assert.equal(
+      (
+        await request(
+          workPath + "/submissions",
+          "POST",
+          { ...delivery, links: ["not-a-url"] },
+          b.cookie,
+        )
+      ).status,
+      400,
+    );
+    await db.pool.query(
+      "UPDATE testnet_escrows SET checked_at=now()-interval '6 minutes' WHERE project_id=$1",
+      [project],
+    );
+    assert.equal(
+      (await request(workPath + "/submissions", "POST", delivery, b.cookie))
+        .status,
+      409,
+    );
+    await request(`/testnet/projects/${project}/check`, "POST", {}, a.cookie);
+    const concurrent = await Promise.all([
+      request(workPath + "/submissions", "POST", delivery, b.cookie),
+      request(workPath + "/submissions", "POST", delivery, b.cookie),
+    ]);
+    assert.deepEqual(concurrent.map((r) => r.status).sort(), [201, 409]);
+    let history = (await request(workPath, "GET", undefined, a.cookie)).body
+      .submissions;
+    assert.equal(history.length, 1);
+    assert.equal(
+      Date.parse(history[0].reviewDueAt) - Date.parse(history[0].submittedAt),
+      7 * 86400000,
+    );
+    const first = history[0].id;
+    const revise = {
+      submissionId: first,
+      decision: "revision_requested",
+      feedback: "Fix the agreed mobile layout",
+    };
+    assert.equal(
+      (await request(workPath + "/reviews", "POST", revise, b.cookie)).status,
+      403,
+    );
+    assert.equal(
+      (
+        await request(
+          workPath + "/reviews",
+          "POST",
+          { ...revise, feedback: " " },
+          a.cookie,
+        )
+      ).status,
+      400,
+    );
+    assert.equal(
+      (await request(workPath + "/reviews", "POST", revise, a.cookie)).status,
+      201,
+    );
+    assert.equal(
+      (await request(workPath + "/reviews", "POST", revise, a.cookie)).status,
+      201,
+    );
+    const second = (
+      await request(
+        workPath + "/submissions",
+        "POST",
+        {
+          ...delivery,
+          expectedLatestId: first,
+          notes: "Revised mobile layout",
+        },
+        b.cookie,
+      )
+    ).body.id;
+    assert.equal(
+      (
+        await request(
+          workPath + "/reviews",
+          "POST",
+          { ...revise, decision: "approved" },
+          a.cookie,
+        )
+      ).status,
+      409,
+    );
+    await request(
+      workPath + "/reviews",
+      "POST",
+      { ...revise, submissionId: second },
+      a.cookie,
+    );
+    const third = (
+      await request(
+        workPath + "/submissions",
+        "POST",
+        { ...delivery, expectedLatestId: second, notes: "Final delivery" },
+        b.cookie,
+      )
+    ).body.id;
+    assert.equal(
+      (
+        await request(
+          workPath + "/reviews",
+          "POST",
+          { ...revise, submissionId: third },
+          a.cookie,
+        )
+      ).status,
+      409,
+    );
+    const approval = {
+      submissionId: third,
+      decision: "approved",
+      feedback: "Meets the criteria",
+    };
+    assert.equal(
+      (await request(workPath + "/reviews", "POST", approval, a.cookie)).status,
+      201,
+    );
+    assert.equal(
+      (
+        await request(
+          workPath + "/reviews",
+          "POST",
+          { ...approval, feedback: "Overwrite" },
+          a.cookie,
+        )
+      ).status,
+      409,
+    );
+    assert.equal(
+      (
+        await request(
+          workPath + "/submissions",
+          "POST",
+          { ...delivery, expectedLatestId: third },
+          b.cookie,
+        )
+      ).status,
+      409,
+    );
+    history = (await request(workPath, "GET", undefined, b.cookie)).body
+      .submissions;
+    assert.deepEqual(
+      history.map((item: { sequence: number }) => item.sequence),
+      [3, 2, 1],
+    );
+    assert.equal(history[2].notes, "First delivery");
+    assert.equal(
+      (
+        await request(
+          `/testnet/projects/${project}`,
+          "GET",
+          undefined,
+          a.cookie,
+        )
+      ).body.approvedSubmissionId,
+      third,
+    );
+    assert.equal(
+      (
+        await request(
+          `/testnet/projects/${project}/prepare`,
+          "POST",
+          { action: "release", version: 1 },
+          a.cookie,
+        )
+      ).status,
+      201,
+    );
   } finally {
     if (project)
       await db.pool.query("DELETE FROM projects WHERE id=$1", [project]);

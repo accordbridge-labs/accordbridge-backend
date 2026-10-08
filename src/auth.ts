@@ -143,6 +143,7 @@ export class AuthController {
     );
   }
   @Get("me")
+  @Throttle({ default: { limit: 240, ttl: 60000 } })
   @UseGuards(SessionGuard)
   me(@Req() req: AuthRequest) {
     return { user: req.user };

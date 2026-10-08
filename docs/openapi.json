@@ -19,6 +19,79 @@
       }
     },
     "schemas": {
+      "WorkSubmission": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "version": {
+            "type": "integer",
+            "exclusiveMinimum": 0,
+            "maximum": 9007199254740991
+          },
+          "expectedLatestId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid",
+                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "notes": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 5000
+          },
+          "links": {
+            "minItems": 1,
+            "maxItems": 10,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "maxLength": 2000,
+              "format": "uri"
+            }
+          }
+        },
+        "required": [
+          "version",
+          "expectedLatestId",
+          "notes",
+          "links"
+        ],
+        "additionalProperties": false
+      },
+      "WorkReview": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "submissionId": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "decision": {
+            "type": "string",
+            "enum": [
+              "approved",
+              "revision_requested"
+            ]
+          },
+          "feedback": {
+            "type": "string",
+            "maxLength": 5000
+          }
+        },
+        "required": [
+          "submissionId",
+          "decision",
+          "feedback"
+        ],
+        "additionalProperties": false
+      },
       "WalletChallenge": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "type": "object",
@@ -585,6 +658,241 @@
     }
   },
   "paths": {
+    "/projects/{id}/work": {
+      "parameters": [
+        {
+          "in": "path",
+          "name": "id",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Read participant-only submission and review history",
+        "security": [
+          {
+            "session": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "description": "canAct boolean and submissions ordered newest first; see docs/WORK-REVIEW.md"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid fields"
+          },
+          "401": {
+            "description": "Sign-in required"
+          },
+          "403": {
+            "description": "Origin/header or action forbidden"
+          },
+          "404": {
+            "description": "Record not found or not accessible"
+          },
+          "409": {
+            "description": "Stale version/draft, locked terms or duplicate account"
+          },
+          "429": {
+            "description": "Too many requests"
+          },
+          "503": {
+            "description": "Testnet configuration, network or contract verification unavailable"
+          }
+        }
+      }
+    },
+    "/projects/{id}/work/submissions": {
+      "parameters": [
+        {
+          "in": "path",
+          "name": "id",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "post": {
+        "summary": "Freelancer submits a new immutable delivery version",
+        "security": [
+          {
+            "session": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WorkSubmission"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Origin",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Must equal configured FRONTEND_ORIGIN"
+          },
+          {
+            "in": "header",
+            "name": "X-AccordBridge-Request",
+            "required": true,
+            "schema": {
+              "const": "1"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "format": "uuid"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid fields"
+          },
+          "401": {
+            "description": "Sign-in required"
+          },
+          "403": {
+            "description": "Origin/header or action forbidden"
+          },
+          "404": {
+            "description": "Record not found or not accessible"
+          },
+          "409": {
+            "description": "Stale version/draft, locked terms or duplicate account"
+          },
+          "429": {
+            "description": "Too many requests"
+          },
+          "503": {
+            "description": "Testnet configuration, network or contract verification unavailable"
+          }
+        }
+      }
+    },
+    "/projects/{id}/work/reviews": {
+      "parameters": [
+        {
+          "in": "path",
+          "name": "id",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "post": {
+        "summary": "Client approves or requests a permitted revision of the latest submission",
+        "security": [
+          {
+            "session": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WorkReview"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Origin",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Must equal configured FRONTEND_ORIGIN"
+          },
+          {
+            "in": "header",
+            "name": "X-AccordBridge-Request",
+            "required": true,
+            "schema": {
+              "const": "1"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "decision": {
+                      "enum": [
+                        "approved",
+                        "revision_requested"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid fields"
+          },
+          "401": {
+            "description": "Sign-in required"
+          },
+          "403": {
+            "description": "Origin/header or action forbidden"
+          },
+          "404": {
+            "description": "Record not found or not accessible"
+          },
+          "409": {
+            "description": "Stale version/draft, locked terms or duplicate account"
+          },
+          "429": {
+            "description": "Too many requests"
+          },
+          "503": {
+            "description": "Testnet configuration, network or contract verification unavailable"
+          }
+        }
+      }
+    },
     "/testnet/wallet": {
       "get": {
         "summary": "Read verified testnet wallet and configuration availability",

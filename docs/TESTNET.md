@@ -23,3 +23,7 @@ Reads require matching state/balance ledger numbers, reject snapshots behind the
 ## Evidence and checks
 
 `npm test` covers real signature validation with generated keys and isolated PostgreSQL API tests using a mocked RPC, including pending/unknown and verified expiry. `npm run test:testnet` requires the sibling contracts' ignored fixture keys and public deployment, uses only an isolated `_test` database, and broadcasts real testnet signatures. It records public hashes in [testnet-api.json](evidence/testnet-api.json). It has executed deployment, both approvals, faucet, funding, first refund vote retaining funds, and second vote returning funds. Contract-level release has separate evidence in the contracts repository. These are not an audit or mainnet evidence. Freighter extension approval still needs a manual two-wallet browser check.
+
+## Work-review integration
+
+The application now requires approval of the latest submission before preparing or submitting release. The existing contract authority is unchanged; direct client calls may release independently of app review. See [WORK-REVIEW.md](WORK-REVIEW.md).

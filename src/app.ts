@@ -9,6 +9,7 @@ import { Database } from "./database";
 import { AuthController, SessionGuard } from "./auth";
 import { ProjectsController } from "./projects";
 import { TestnetController } from "./testnet";
+import { WorkController } from "./work";
 import { Stellar } from "./stellar";
 
 @Controller("health")
@@ -26,6 +27,7 @@ class HealthController {
     ProjectsController,
     HealthController,
     TestnetController,
+    WorkController,
   ],
   providers: [
     Database,

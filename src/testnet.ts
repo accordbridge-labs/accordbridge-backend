@@ -16,6 +16,7 @@ import {
 import { randomBytes, randomUUID } from "node:crypto";
 import * as S from "@stellar/stellar-sdk";
 import { z } from "zod";
+import { approvedWork } from "./work";
 import { Database } from "./database";
 import { AuthRequest, SessionGuard } from "./auth";
 import { parse } from "./schemas";
@@ -188,6 +189,7 @@ export class TestnetController {
       network: "testnet",
       tokenSymbol: "ABUSD",
       tokenHasMonetaryValue: false,
+      approvedSubmissionId: await approvedWork(this.db.pool, id),
       feePercent: 0,
       clientWallet:
         wallets.find((item) => item.user_id === project.client_id)?.address ??
@@ -257,6 +259,10 @@ export class TestnetController {
       )
         throw new ForbiddenException(
           "Only the client can perform this action.",
+        );
+      if (data.action === "release" && !(await approvedWork(client, id)))
+        throw new ConflictException(
+          "Approve the latest work submission before preparing release.",
         );
       const pending = (
         await client.query(
@@ -445,6 +451,10 @@ export class TestnetController {
     if (!intent || !["prepared", "submitted"].includes(intent.state))
       throw new ConflictException(
         "Transaction intent is missing or already resolved.",
+      );
+    if (intent.action === "release" && !(await approvedWork(this.db.pool, id)))
+      throw new ConflictException(
+        "Approve the latest work submission before submitting release.",
       );
     const tx = signedTransaction(intent.xdr, data.signedXdr, intent.address);
     // Save the hash/state BEFORE contacting RPC. Network failure remains reconcilable.

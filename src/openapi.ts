@@ -1,6 +1,8 @@
 import { writeFileSync } from "node:fs";
 import { z } from "zod";
 import {
+  submissionSchema,
+  reviewSchema,
   acceptSchema,
   createSchema,
   draftSchema,
@@ -11,6 +13,8 @@ import {
 } from "./schemas";
 
 const requests = {
+  WorkSubmission: submissionSchema,
+  WorkReview: reviewSchema,
   WalletChallenge: z.object({ address: z.string() }).strict(),
   WalletVerify: z
     .object({ id: z.string().uuid(), signedXdr: z.string().max(20000) })
@@ -160,6 +164,36 @@ const document = {
     },
   },
   paths: {
+    "/projects/{id}/work": {
+      parameters: [idParameter],
+      get: operation(
+        "Read participant-only submission and review history",
+        "get",
+        {
+          type: "object",
+          description:
+            "canAct boolean and submissions ordered newest first; see docs/WORK-REVIEW.md",
+        },
+      ),
+    },
+    "/projects/{id}/work/submissions": {
+      parameters: [idParameter],
+      post: operation(
+        "Freelancer submits a new immutable delivery version",
+        "post",
+        object({ id: { type: "string", format: "uuid" } }),
+        "WorkSubmission",
+      ),
+    },
+    "/projects/{id}/work/reviews": {
+      parameters: [idParameter],
+      post: operation(
+        "Client approves or requests a permitted revision of the latest submission",
+        "post",
+        object({ decision: { enum: ["approved", "revision_requested"] } }),
+        "WorkReview",
+      ),
+    },
     "/testnet/wallet": {
       get: operation(
         "Read verified testnet wallet and configuration availability",

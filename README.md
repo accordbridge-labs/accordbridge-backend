@@ -51,7 +51,7 @@ pg_ctl -D .local/postgres stop
 - Published milestone prices remain decimal strings. Validation uses integer cents and currently permits two decimal places. This development convention is not a final Stellar asset-precision decision.
 - A server-owned funding lock blocks agreement edits and acceptance. Preparing the first testnet deployment locks terms before signing. This lock is not proof of funding; only verified contract state and token balance establish funding.
 
-Unsafe requests require both the configured Origin and `X-AccordBridge-Request: 1`; cross-origin CORS is not enabled. Request size is limited to 64 KB. There are per-IP, per-handler in-memory rate limits (15/minute on authentication routes; 240/minute elsewhere). These are for a single local service; shared rate-limit storage and a reviewed reverse-proxy IP policy are required before multi-instance deployment.
+Unsafe requests require both the configured Origin and `X-AccordBridge-Request: 1`; cross-origin CORS is not enabled. Request size is limited to 64 KB. There are per-IP, per-handler in-memory rate limits (15/minute on authentication mutations; 240/minute on session reads and other routes). These are for a single local service; shared rate-limit storage and a reviewed reverse-proxy IP policy are required before multi-instance deployment.
 
 ## API and tests
 
@@ -78,3 +78,7 @@ See this repository's planning issues. License selection is pending.
 ## Stellar testnet
 
 See [setup, authority and recovery limits](docs/TESTNET.md). Migration 002 adds wallet proofs, frozen escrow snapshots and transaction intents. No backend wallet key is needed.
+
+## Deliverable submission and review
+
+[Work-review rules and API](docs/WORK-REVIEW.md) cover first-milestone delivery links, immutable versions, client decisions, revision limits and UTC deadlines. Approval gates app-managed release; wallet signing remains separate. Apply migration 003 before running this version. File upload storage and dispute handling remain future work.

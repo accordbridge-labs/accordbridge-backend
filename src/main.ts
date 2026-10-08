@@ -6,7 +6,7 @@ async function main() {
     process.env.HOST ?? "127.0.0.1",
   );
   console.log(
-    `AccordBridge API listening on port ${process.env.PORT ?? 4000}; payments disabled.`,
+    `AccordBridge API listening on port ${process.env.PORT ?? 4000}; mainnet payments disabled; testnet requires explicit configuration.`,
   );
 }
 main().catch(() => {

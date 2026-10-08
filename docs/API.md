@@ -22,4 +22,20 @@ The UI saves before publishing. If saving succeeds and publishing fails, the dra
 
 Versions have immutable agreement JSON, publisher ID and timestamp. Acceptances have user ID, role and timestamp and are keyed by project/version/user, with a unique project/version/role constraint. They never migrate to a new version. Draft and publication writes use a single PostgreSQL transaction with a project row lock.
 
-There are no payment, file-upload or administrative signing endpoints. The persisted project does not import state from the payment demo. Account email verification/recovery and invitations remain future work.
+There are no mainnet payment, file-upload or administrative signing endpoints. The persisted project does not import state from the payment demo. Account email verification/recovery and invitations remain future work.
+
+## Experimental testnet routes
+
+All routes below require a session; mutations retain the same origin/header checks. Project routes require membership.
+
+| Method / path | Request / behavior |
+| --- | --- |
+| GET /testnet/wallet | Linked public address, testnet passphrase and feature availability. |
+| POST /testnet/wallet/challenge | `{address}`; five-minute, single-use, never-broadcast proof transaction. |
+| POST /testnet/wallet/verify | `{id,signedXdr}`; verifies the exact challenge and master-key signature. Wallet links are immutable and globally unique. |
+| GET /testnet/projects/:id | Frozen escrow fields, last verified chain state/time, participant wallets and transaction records. |
+| POST /testnet/projects/:id/prepare | `{action,version}`; action is deploy, accept, faucet, fund, release or refund. Returns an unsigned testnet transaction, hash, fee and expiry. Repeats resume the same pending prepared action; conflicting actions return 409. |
+| POST /testnet/projects/:id/submit | `{intentId,signedXdr}`; validates original contents and signer, persists submitted state before broadcasting. A response is not payment confirmation. |
+| POST /testnet/projects/:id/check | Reconciles the pending hash and verifies pinned code, immutable terms and held balance. Returns current project testnet status. |
+
+See [testnet limitations](TESTNET.md). RPC failures preserve pending intents; an unknown result cannot authorize a fresh payment.

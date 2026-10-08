@@ -3,10 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "engines": {
-    "node": ">=22"
+    "node": ">=22.12"
   },
   "scripts": {
     "build": "tsc",
+    "test:testnet": "npm run build && node --env-file=.env.test scripts/testnet-smoke.mjs",
     "docs:api": "npm run build && node dist/src/openapi.js",
     "start": "node --env-file=.env dist/src/main.js",
     "dev": "npm run build && npm start",
@@ -21,6 +22,7 @@
     "@nestjs/core": "11.2.7",
     "@nestjs/platform-express": "11.2.7",
     "@nestjs/throttler": "6.7.1",
+    "@stellar/stellar-sdk": "17.2.1",
     "cookie-parser": "1.4.7",
     "helmet": "8.3.0",
     "pg": "8.23.1",

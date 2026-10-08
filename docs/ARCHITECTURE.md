@@ -33,3 +33,7 @@ Store files, conversations, and identifying dispute material in protected storag
 ## Operational concerns
 
 Plan notification retries, deadline jobs, chain reconciliation, contract storage lifetime/restoration, logs with secret redaction, backups, incident response, and key recovery. A scheduler can submit an authorized action; it cannot bypass missing contract permissions or create a timeout right by itself.
+
+## Implemented testnet experiment
+
+The optional first-milestone escrow path is described in [TESTNET.md](TESTNET.md). It adds participant wallet proofs, immutable contract snapshots and persisted transaction reconciliation. Earlier proposed provider/resolver flows remain design work and are not authorities in this experimental contract.

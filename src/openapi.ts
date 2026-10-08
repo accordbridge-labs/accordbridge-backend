@@ -11,6 +11,26 @@ import {
 } from "./schemas";
 
 const requests = {
+  WalletChallenge: z.object({ address: z.string() }).strict(),
+  WalletVerify: z
+    .object({ id: z.string().uuid(), signedXdr: z.string().max(20000) })
+    .strict(),
+  TestnetPrepare: z
+    .object({
+      action: z.enum([
+        "deploy",
+        "accept",
+        "faucet",
+        "fund",
+        "release",
+        "refund",
+      ]),
+      version: z.number().int().positive(),
+    })
+    .strict(),
+  TestnetSubmit: z
+    .object({ intentId: z.string().uuid(), signedXdr: z.string().max(60000) })
+    .strict(),
   Register: registerSchema,
   Login: loginSchema,
   CreateProject: createSchema,
@@ -33,6 +53,10 @@ const responses = (success: number, value: unknown) => ({
     description: "Stale version/draft, locked terms or duplicate account",
   },
   "429": { description: "Too many requests" },
+  "503": {
+    description:
+      "Testnet configuration, network or contract verification unavailable",
+  },
 });
 const object = (properties: object) => ({ type: "object", properties });
 const user = object({
@@ -117,7 +141,7 @@ const document = {
     title: "AccordBridge workspace API",
     version: "0.1.0",
     description:
-      "Development workspace. No payment endpoints. Sessions use HttpOnly cookies; unsafe requests require an exact allowed Origin and X-AccordBridge-Request: 1.",
+      "Development workspace with optional valueless-token testnet escrow. No mainnet payments. Sessions use HttpOnly cookies; unsafe requests require an exact allowed Origin and X-AccordBridge-Request: 1.",
   },
   servers: [{ url: "http://127.0.0.1:4000/api" }],
   components: {
@@ -136,6 +160,89 @@ const document = {
     },
   },
   paths: {
+    "/testnet/wallet": {
+      get: operation(
+        "Read verified testnet wallet and configuration availability",
+        "get",
+        object({
+          address: { type: ["string", "null"] },
+          enabled: { type: "boolean" },
+          networkPassphrase: { type: "string" },
+        }),
+      ),
+    },
+    "/testnet/wallet/challenge": {
+      post: operation(
+        "Create a never-broadcast ownership proof",
+        "post",
+        object({
+          id: { type: "string" },
+          xdr: { type: "string" },
+          networkPassphrase: { type: "string" },
+        }),
+        "WalletChallenge",
+      ),
+    },
+    "/testnet/wallet/verify": {
+      post: operation(
+        "Verify single-use wallet proof and permanently link address",
+        "post",
+        object({ address: { type: "string" } }),
+        "WalletVerify",
+      ),
+    },
+    "/testnet/projects/{id}": {
+      parameters: [idParameter],
+      get: operation(
+        "Read frozen escrow, timestamped chain snapshot and transaction intents",
+        "get",
+        {
+          type: "object",
+          description:
+            "See docs/API.md and TESTNET.md; escrow may be null and chain state may be unverified.",
+        },
+      ),
+    },
+    "/testnet/projects/{id}/prepare": {
+      parameters: [idParameter],
+      post: operation(
+        "Prepare or resume one unsigned testnet intent; freezes terms",
+        "post",
+        object({
+          id: { type: "string" },
+          xdr: { type: "string" },
+          hash: { type: "string" },
+          address: { type: "string" },
+          networkPassphrase: { type: "string" },
+          expiresAt: { type: "integer" },
+          fee: { type: "string" },
+        }),
+        "TestnetPrepare",
+      ),
+    },
+    "/testnet/projects/{id}/submit": {
+      parameters: [idParameter],
+      post: operation(
+        "Validate signed intent and submit; does not confirm payment",
+        "post",
+        object({
+          hash: { type: "string" },
+          state: { enum: ["submitted", "unknown"] },
+        }),
+        "TestnetSubmit",
+      ),
+    },
+    "/testnet/projects/{id}/check": {
+      parameters: [idParameter],
+      post: operation(
+        "Reconcile transaction and verify contract terms and balance",
+        "post",
+        {
+          type: "object",
+          description: "Same shape as GET /testnet/projects/{id}.",
+        },
+      ),
+    },
     "/health": {
       get: operation(
         "Read database readiness",

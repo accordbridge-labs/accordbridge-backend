@@ -15,7 +15,8 @@
     "db:migrate": "npm run build && node --env-file=.env dist/src/migrate.js",
     "test": "npm run build && node --env-file=.env.test --test dist/test/*.test.js",
     "format": "prettier --write src test scripts *.json",
-    "format:check": "prettier --check src test scripts *.json"
+    "format:check": "prettier --check src test scripts *.json",
+    "start:hosted": "node dist/src/migrate.js && node dist/src/main.js"
   },
   "dependencies": {
     "@nestjs/common": "11.2.7",

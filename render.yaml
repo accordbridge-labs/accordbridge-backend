@@ -1,0 +1,38 @@
+# Temporary testnet demo: free PostgreSQL expires after 30 days.
+services:
+  - type: web
+    name: accordbridge-testnet-api
+    runtime: node
+    plan: free
+    region: frankfurt
+    buildCommand: npm ci --include=dev && npm run build
+    startCommand: npm run start:hosted
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_VERSION
+        value: "24"
+      - key: NODE_ENV
+        value: production
+      - key: HOST
+        value: 0.0.0.0
+      - key: FRONTEND_ORIGIN
+        sync: false
+      - key: DATABASE_URL
+        fromDatabase:
+          name: accordbridge-testnet-db
+          property: connectionString
+      - key: STELLAR_TESTNET_ENABLED
+        value: "true"
+      - key: STELLAR_ESCROW_WASM_HASH
+        value: "0d17ac8fb6495f2258d1707f72157b25f0fa7a4912a2c1691364b302267f86b9"
+      - key: STELLAR_TEST_TOKEN_CONTRACT
+        value: "CDUMZP5TPU4GAMUL7MQOPJUO7M3HQ2VS6QXD33L6XA6Q4BH3FIRHL3P4"
+      - key: STELLAR_TEST_TOKEN_WASM_HASH
+        value: "47d4cdec1486c27f4826bd49764a09dd5eec1d7a5083be43820bca18905f45a3"
+databases:
+  - name: accordbridge-testnet-db
+    plan: free
+    region: frankfurt
+    databaseName: accordbridge
+    user: accordbridge
+    ipAllowList: []

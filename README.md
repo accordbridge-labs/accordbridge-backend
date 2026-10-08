@@ -82,3 +82,7 @@ See [setup, authority and recovery limits](docs/TESTNET.md). Migration 002 adds 
 ## Deliverable submission and review
 
 [Work-review rules and API](docs/WORK-REVIEW.md) cover first-milestone delivery links, immutable versions, client decisions, revision limits and UTC deadlines. Approval gates app-managed release; wallet signing remains separate. Apply migration 003 before running this version. File upload storage and dispute handling remain future work.
+
+## Hosted testnet demo
+
+See [Vercel + Render deployment](docs/HOSTING.md). `render.yaml` defines a temporary free API/database setup; `npm run start:hosted` applies migrations and starts from provider environment variables. No hosted resources are created by committing these files.

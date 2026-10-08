@@ -1,0 +1,40 @@
+{
+  "network": "testnet",
+  "escrow": "CACTGB7DPVO2OSZYL42DJ3ZBJGCUJTKZ4JTMXWEF55JYBGUMZSRXUUI7",
+  "escrowWasmHash": "0d17ac8fb6495f2258d1707f72157b25f0fa7a4912a2c1691364b302267f86b9",
+  "tokenContract": "CDUMZP5TPU4GAMUL7MQOPJUO7M3HQ2VS6QXD33L6XA6Q4BH3FIRHL3P4",
+  "amountBaseUnits": "1500000000",
+  "finalStatus": "refunded",
+  "onePartyRefundDidNotMoveTokens": true,
+  "transactions": [
+    {
+      "action": "deploy",
+      "hash": "021b862d1c9a4dcd2c057edbd9f9b5c17e26a39baf21480e9d886944161330b8"
+    },
+    {
+      "action": "faucet",
+      "hash": "7019c5973c4252ee85a0f6f74692b41a609a8001d6e6015f7f4d6da778ed1a57"
+    },
+    {
+      "action": "accept",
+      "hash": "4749d8fd3f6aeb6610fdea18f7f30616b5ace99ffc49c12458110e76b8e6f16e"
+    },
+    {
+      "action": "accept",
+      "hash": "c857a438c4ee7b0ef42136e9655c5f6c752074f31ded5fece2c800932c4cbca2"
+    },
+    {
+      "action": "fund",
+      "hash": "6a30601d2f95fcc834dc9dd609b66641a32dc7dc20556681569ad0e7373ba5d8"
+    },
+    {
+      "action": "refund",
+      "hash": "09c65e3e3c61da99a311e57ac2bf917f2ccf83c8dc8c1be53d2af43c00454302"
+    },
+    {
+      "action": "refund",
+      "hash": "8126b9389e46f8378ee64fd4aa4147dd59b3aebd6bfa603b8e93486c107e5513"
+    }
+  ],
+  "checkedAt": "2026-10-08T20:04:46.333Z"
+}

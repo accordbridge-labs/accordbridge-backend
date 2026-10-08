@@ -1,6 +1,6 @@
 # AccordBridge Backend
 
-**Status: working local development service.** TypeScript, NestJS 11 and PostgreSQL now power accounts, sessions, participant-scoped projects, private drafts, immutable agreement versions and version-specific acceptance. No hosted environment or payment integration exists.
+**Status: working local development service.** TypeScript, NestJS 11 and PostgreSQL now power accounts, sessions, participant-scoped projects, private drafts, immutable agreement versions and version-specific acceptance. Experimental Stellar testnet escrow is available; no hosted environment or real-money integration exists.
 
 This repository owns the canonical product specification and the proposed service boundary for AccordBridge, a Stellar freelancer–client payment workspace.
 
@@ -49,7 +49,7 @@ pg_ctl -D .local/postgres stop
 - Drafts belong to their author. Only the two project participants see published agreements and their version history. Unrelated accounts receive 404 rather than project details.
 - Draft saves and publications check expected version/revision. Project-row locks serialize conflicting publications and acceptance. New versions retain old acceptance history and start with no current acceptances. Acceptance ignores no caller-supplied identity: such extra fields are rejected.
 - Published milestone prices remain decimal strings. Validation uses integer cents and currently permits two decimal places. This development convention is not a final Stellar asset-precision decision.
-- A server-owned funding lock blocks agreement edits and acceptance. There is no API to set funding, record payments, or bypass the lock; tests exercise it directly in the isolated database. Future chain reconciliation must own that transition.
+- A server-owned funding lock blocks agreement edits and acceptance. Preparing the first testnet deployment locks terms before signing. This lock is not proof of funding; only verified contract state and token balance establish funding.
 
 Unsafe requests require both the configured Origin and `X-AccordBridge-Request: 1`; cross-origin CORS is not enabled. Request size is limited to 64 KB. There are per-IP, per-handler in-memory rate limits (15/minute on authentication routes; 240/minute elsewhere). These are for a single local service; shared rate-limit storage and a reviewed reverse-proxy IP policy are required before multi-instance deployment.
 
@@ -67,10 +67,14 @@ Tests require `.env.test` to select a database whose name ends in `_test`. They 
 
 ## Development boundary
 
-Email addresses are login identifiers and **are not verified**. Accounts are not proof of email ownership, identity, or wallet ownership. Participants must exchange account IDs deliberately. Email verification, password recovery, invitations, account deletion, session-management UI, audit operations, backups, deployment, private file storage and payment integration are not implemented. Existing test accounts should not be treated as production identities.
+Email addresses are login identifiers and **are not verified**. Accounts are not proof of email ownership, identity, or wallet ownership. Participants must exchange account IDs deliberately. Email verification, password recovery, invitations, account deletion, session-management UI, audit operations, backups, deployment, private file storage and mainnet payment integration are not implemented. Existing test accounts should not be treated as production identities.
 
 No user wallet private keys are stored or requested. Resolver/operator signing requires a separately reviewed authority and key-management design. Dispute and fee policies remain open in the product specification.
 
 Related repositories: [frontend](https://github.com/accordbridge-labs/accordbridge-frontend), [contracts](https://github.com/accordbridge-labs/accordbridge-contracts).
 
 See this repository's planning issues. License selection is pending.
+
+## Stellar testnet
+
+See [setup, authority and recovery limits](docs/TESTNET.md). Migration 002 adds wallet proofs, frozen escrow snapshots and transaction intents. No backend wallet key is needed.

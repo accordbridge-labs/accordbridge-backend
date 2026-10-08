@@ -8,6 +8,8 @@ import { json, Request, Response, NextFunction } from "express";
 import { Database } from "./database";
 import { AuthController, SessionGuard } from "./auth";
 import { ProjectsController } from "./projects";
+import { TestnetController } from "./testnet";
+import { Stellar } from "./stellar";
 
 @Controller("health")
 class HealthController {
@@ -19,9 +21,15 @@ class HealthController {
 }
 @Module({
   imports: [ThrottlerModule.forRoot([{ ttl: 60000, limit: 240 }])],
-  controllers: [AuthController, ProjectsController, HealthController],
+  controllers: [
+    AuthController,
+    ProjectsController,
+    HealthController,
+    TestnetController,
+  ],
   providers: [
     Database,
+    Stellar,
     SessionGuard,
     { provide: APP_GUARD, useClass: ThrottlerGuard },
   ],

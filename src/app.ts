@@ -11,6 +11,7 @@ import { ProjectsController } from "./projects";
 import { TestnetController } from "./testnet";
 import { WorkController } from "./work";
 import { Stellar } from "./stellar";
+import { ReadinessController, TestnetReadiness } from "./readiness";
 
 @Controller("health")
 class HealthController {
@@ -28,10 +29,12 @@ class HealthController {
     HealthController,
     TestnetController,
     WorkController,
+    ReadinessController,
   ],
   providers: [
     Database,
     Stellar,
+    TestnetReadiness,
     SessionGuard,
     { provide: APP_GUARD, useClass: ThrottlerGuard },
   ],

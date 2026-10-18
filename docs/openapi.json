@@ -658,6 +658,75 @@
     }
   },
   "paths": {
+    "/testnet/readiness": {
+      "get": {
+        "summary": "Read cached testnet deployment readiness; never confirms a payment",
+        "security": [
+          {
+            "session": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "enum": [
+                        "ready",
+                        "not_configured",
+                        "wrong_network",
+                        "entry_unavailable",
+                        "code_mismatch",
+                        "rpc_unavailable"
+                      ]
+                    },
+                    "checkedAt": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "expiresAt": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "network": {
+                      "const": "testnet"
+                    },
+                    "mainnetPayments": {
+                      "const": false
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid fields"
+          },
+          "401": {
+            "description": "Sign-in required"
+          },
+          "403": {
+            "description": "Origin/header or action forbidden"
+          },
+          "404": {
+            "description": "Record not found or not accessible"
+          },
+          "409": {
+            "description": "Stale version/draft, locked terms or duplicate account"
+          },
+          "429": {
+            "description": "Too many requests"
+          },
+          "503": {
+            "description": "Testnet configuration, network or contract verification unavailable"
+          }
+        }
+      }
+    },
     "/projects/{id}/work": {
       "parameters": [
         {

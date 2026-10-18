@@ -73,7 +73,7 @@ No user wallet private keys are stored or requested. Resolver/operator signing r
 
 Related repositories: [frontend](https://github.com/accordbridge-labs/accordbridge-frontend), [contracts](https://github.com/accordbridge-labs/accordbridge-contracts).
 
-See this repository's planning issues. License selection is pending.
+Licensed under the [MIT License](LICENSE). Dependencies retain their own licenses and notices. See this repository's issues for planned work.
 
 ## Stellar testnet
 

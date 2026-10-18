@@ -164,6 +164,28 @@ const document = {
     },
   },
   paths: {
+    "/testnet/readiness": {
+      get: operation(
+        "Read cached testnet deployment readiness; never confirms a payment",
+        "get",
+        object({
+          status: {
+            enum: [
+              "ready",
+              "not_configured",
+              "wrong_network",
+              "entry_unavailable",
+              "code_mismatch",
+              "rpc_unavailable",
+            ],
+          },
+          checkedAt: { type: "string", format: "date-time" },
+          expiresAt: { type: "string", format: "date-time" },
+          network: { const: "testnet" },
+          mainnetPayments: { const: false },
+        }),
+      ),
+    },
     "/projects/{id}/work": {
       parameters: [idParameter],
       get: operation(

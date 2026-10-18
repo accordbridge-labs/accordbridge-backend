@@ -79,6 +79,8 @@ See this repository's planning issues. License selection is pending.
 
 See [setup, authority and recovery limits](docs/TESTNET.md). Migration 002 adds wallet proofs, frozen escrow snapshots and transaction intents. No backend wallet key is needed.
 
+The authenticated [readiness diagnostic](docs/READINESS.md) checks network and pinned deployment availability without submitting transactions. Backend CI runs the PostgreSQL integration suite and checks the generated API contract for drift.
+
 ## Deliverable submission and review
 
 [Work-review rules and API](docs/WORK-REVIEW.md) cover first-milestone delivery links, immutable versions, client decisions, revision limits and UTC deadlines. Approval gates app-managed release; wallet signing remains separate. Apply migration 003 before running this version. File upload storage and dispute handling remain future work.

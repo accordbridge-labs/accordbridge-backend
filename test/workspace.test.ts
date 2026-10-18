@@ -75,6 +75,7 @@ test("PostgreSQL workspace, sessions and authorization", async (t) => {
       "register, reject invalid credentials and enforce request origin",
       async () => {
         assert.equal((await request("/projects")).status, 401);
+        assert.equal((await request("/testnet/readiness")).status, 401);
         const account = await request("/auth/register", "POST", {
           name: "Alice",
           email: `alice-${suffix}@example.test`,
@@ -84,6 +85,15 @@ test("PostgreSQL workspace, sessions and authorization", async (t) => {
         ids.push(account.body.user.id);
         alice = account.cookie;
         cookie = alice;
+        const readiness = await request("/testnet/readiness");
+        assert.equal(readiness.status, 200);
+        assert.equal(readiness.body.status, "not_configured");
+        assert.equal(readiness.headers.get("cache-control"), "no-store");
+        assert.equal((await request("/health")).body.status, "ok");
+        // The unauthenticated attempt also consumes one IP-based throttle slot.
+        for (let i = 0; i < 8; i++)
+          assert.equal((await request("/testnet/readiness")).status, 200);
+        assert.equal((await request("/testnet/readiness")).status, 429);
         assert.match(account.headers.get("set-cookie")!, /HttpOnly/);
         assert.match(account.headers.get("set-cookie")!, /SameSite=Lax/i);
         assert.equal(account.body.user.password_hash, undefined);

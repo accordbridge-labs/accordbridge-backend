@@ -1,17 +1,23 @@
 # AccordBridge Backend
 
-**Status: working local development service.** TypeScript, NestJS 11 and PostgreSQL now power accounts, sessions, participant-scoped projects, private drafts, immutable agreement versions and version-specific acceptance. Experimental Stellar testnet escrow is available; no hosted environment or real-money integration exists.
+[![Backend checks](https://github.com/accordbridge-labs/accordbridge-backend/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/accordbridge-labs/accordbridge-backend/actions/workflows/ci.yml)
 
-This repository owns the canonical product specification and the proposed service boundary for AccordBridge, a Stellar freelancer–client payment workspace.
+[Local setup](#run-locally) · [API and tests](#api-and-tests) · [Testnet](#stellar-testnet) · [Hosting](#hosted-testnet-demo) · [Contribute](https://github.com/accordbridge-labs/.github/blob/main/docs/START-HERE.md)
+
+**Status: development/Testnet prototype.** TypeScript, NestJS 11 and PostgreSQL power accounts, sessions, participant-scoped projects, private drafts, immutable agreement versions and version-specific acceptance. Experimental Stellar Testnet escrow and a hosted demo are available. A [limited hosted preflight](https://github.com/accordbridge-labs/accordbridge-frontend/blob/main/docs/HOSTED-PREFLIGHT.md) recorded session and agreement checks on 18 October 2026; it did not test wallet signing or establish production readiness. No real-money integration exists.
+
+This repository owns the canonical product specification and API for AccordBridge, a Stellar freelancer–client workspace. PostgreSQL stores private project records and transaction intents; the escrow contract holds test tokens. The API prepares unsigned transactions, accepts wallet-signed submissions and reconciles chain state. It does not hold participants' wallet private keys.
 
 ## Responsibility
 
 - Accounts, wallet-ownership verification, and project-scoped access.
 - Versioned agreements and acceptance records.
-- Private submission/evidence storage and controlled access.
-- Change requests, review deadlines, reminders, and case management.
+- Versioned delivery notes and HTTPS links, participant access, review deadlines and revision requests.
 - Transaction tracking, chain reconciliation, and idempotent workflows.
-- Payment receipts and operational records.
+- Verified settlement snapshots and transaction records.
+
+Paid scope changes, notifications/reminders, dispute case management, file uploads
+and production operations remain planned, not implemented service guarantees.
 
 ## Documents
 
@@ -34,7 +40,7 @@ npm start
 
 For an existing database, copy `.env.example` to `.env`, supply the connection string, and run migrations. Keep credentials out of Git. Migrations are transactional, use a migration lock, and verify the hash of previously applied files. Create a new migration to change an applied schema.
 
-The API listens on `127.0.0.1:4000`. The frontend uses its server-side `/api` proxy. Keep `FRONTEND_ORIGIN` identical to the browser origin (`http://127.0.0.1:3000` locally; `localhost` is a different origin). `NODE_ENV=production` requires an HTTPS frontend origin and enables Secure session cookies. Production hosting and proxy configuration have not been validated.
+The API listens on `127.0.0.1:4000`. The frontend uses its server-side `/api` proxy. Keep `FRONTEND_ORIGIN` identical to the browser origin (`http://127.0.0.1:3000` locally; `localhost` is a different origin). `NODE_ENV=production` requires an HTTPS frontend origin and enables Secure session cookies. Limited hosted proxy/session behavior was checked in the linked preflight; broader production security and operations remain unvalidated.
 
 To stop the helper's cluster without deleting its data:
 
@@ -67,7 +73,7 @@ Tests require `.env.test` to select a database whose name ends in `_test`. They 
 
 ## Development boundary
 
-Email addresses are login identifiers and **are not verified**. Accounts are not proof of email ownership, identity, or wallet ownership. Participants must exchange account IDs deliberately. Email verification, password recovery, invitations, account deletion, session-management UI, audit operations, backups, deployment, private file storage and mainnet payment integration are not implemented. Existing test accounts should not be treated as production identities.
+Email addresses are login identifiers and **are not verified**. Accounts are not proof of email ownership, identity, or wallet ownership. Participants must exchange account IDs deliberately. Email verification, password recovery, invitations, account deletion, session-management UI, audit operations, backup/restore procedures, private file storage and mainnet payment integration are not implemented. Existing test accounts should not be treated as production identities.
 
 No user wallet private keys are stored or requested. Resolver/operator signing requires a separately reviewed authority and key-management design. Dispute and fee policies remain open in the product specification.
 

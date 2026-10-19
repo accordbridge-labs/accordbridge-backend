@@ -30,3 +30,15 @@ Credentials belong in provider environment settings, never Git or chat. The blue
 - [Vercel environment variables](https://vercel.com/docs/environment-variables)
 
 Local builds and isolated database tests do not establish hosted readiness. Account authorization, cloud provisioning, hosted session/cookie verification and a real Freighter browser check must still complete before sharing the demo.
+
+## Request correlation
+
+Every API response, including application and middleware errors, carries a new server-generated `X-Request-ID` UUID. Completion logs contain only `requestId`, an allowlisted HTTP method, the matched route template (for example `/api/projects/:id`), HTTP status and elapsed milliseconds. Unmatched routes and requests rejected before routing use `unmatched`; raw paths and query values are never used as a fallback. Bodies, cookies, authorization, participant IDs and signed envelopes are excluded from these records. Give support the request ID and approximate time rather than a private payload.
+
+All caller/proxy request IDs are ignored, even if they look valid. No proxy trust setting is enabled or changed. IDs correlate one backend request, not multiple retries or frontend proxy failures; a proxy that fails before reaching the API has no backend request ID. Completion records describe HTTP outcomes, not proof that a transaction committed. Logs stay on the process's standard output; no telemetry service is added.
+
+## Public build revision
+
+Set `BUILD_REVISION` explicitly to the full 40-character hexadecimal Git commit SHA used for this backend release. It is validated and captured at startup, normalized to lowercase, and returned as `revision` by `GET /api/health`. Missing or empty configuration returns `"unknown"`; malformed values abort startup with a fixed message that does not echo the value. No checkout inspection, provider-variable fallback or environment dump occurs. Health still queries PostgreSQL and only returns `status: ok` after that succeeds; payments remain disabled.
+
+For Render, configure the start command as `BUILD_REVISION="$RENDER_GIT_COMMIT" npm run start:hosted` to explicitly supply [Render's source revision](https://render.com/docs/environment-variables#render_git_commit) to the process. For another provider, inject the exact checked-out commit through its release configuration as `BUILD_REVISION`. Redeploy/restart after changing it. Keep credentials in separate secret settings; never use a database URL, branch name or token as the revision. The API reads only `BUILD_REVISION`, not other provider environment variables. Record this public value alongside hosted preflight evidence; a configured SHA is metadata, not proof that a deployment is trusted or an attestation of its contents.

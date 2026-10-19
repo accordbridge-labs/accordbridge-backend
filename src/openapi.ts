@@ -47,6 +47,9 @@ const schema = (name: string) => ({ $ref: `#/components/schemas/${name}` });
 const json = (value: unknown) => ({
   content: { "application/json": { schema: value } },
 });
+const responseHeaders = {
+  "X-Request-ID": { $ref: "#/components/headers/RequestId" },
+};
 const responses = (success: number, value: unknown) => ({
   [success]: { description: "Success", ...json(value) },
   "400": { description: "Invalid fields" },
@@ -130,7 +133,11 @@ function operation(
           ],
         }
       : {}),
-    responses: responses(method === "post" ? 201 : 200, response),
+    responses: Object.fromEntries(
+      Object.entries(responses(method === "post" ? 201 : 200, response)).map(
+        ([status, value]) => [status, { ...value, headers: responseHeaders }],
+      ),
+    ),
   };
 }
 const idParameter = {
@@ -149,6 +156,12 @@ const document = {
   },
   servers: [{ url: "http://127.0.0.1:4000/api" }],
   components: {
+    headers: {
+      RequestId: {
+        description: "Server-generated correlation ID; caller IDs are ignored.",
+        schema: { type: "string", format: "uuid" },
+      },
+    },
     securitySchemes: {
       session: { type: "apiKey", in: "cookie", name: "accordbridge_session" },
     },
@@ -303,7 +316,16 @@ const document = {
       get: operation(
         "Read database readiness",
         "get",
-        object({ status: { const: "ok" }, payments: { const: "disabled" } }),
+        object({
+          status: { const: "ok" },
+          payments: { const: "disabled" },
+          revision: {
+            type: "string",
+            pattern: "^(unknown|[0-9a-f]{40})$",
+            description:
+              "Explicitly configured source commit SHA, or unknown. Not an attestation.",
+          },
+        }),
         undefined,
         false,
       ),

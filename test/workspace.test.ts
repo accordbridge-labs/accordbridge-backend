@@ -8,7 +8,12 @@ import { migrate } from "../src/migrate";
 test("PostgreSQL workspace, sessions and authorization", async (t) => {
   if (!new URL(process.env.DATABASE_URL!).pathname.endsWith("_test"))
     throw new Error("Tests require a separate database ending in _test");
-  let app = await createApp();
+  const priorRevision = process.env.BUILD_REVISION;
+  process.env.BUILD_REVISION = "a".repeat(40);
+  const requestRecords: import("../src/request-metadata").RequestRecord[] = [];
+  let app = await createApp({
+    requestLog: (record) => requestRecords.push(record),
+  });
   let db = app.get(Database);
   await migrate(db);
   await app.listen(0, "127.0.0.1");
@@ -89,7 +94,17 @@ test("PostgreSQL workspace, sessions and authorization", async (t) => {
         assert.equal(readiness.status, 200);
         assert.equal(readiness.body.status, "not_configured");
         assert.equal(readiness.headers.get("cache-control"), "no-store");
-        assert.equal((await request("/health")).body.status, "ok");
+        const health = await request("/health");
+        assert.deepEqual(health.body, {
+          status: "ok",
+          payments: "disabled",
+          revision: "a".repeat(40),
+        });
+        const healthLog = requestRecords.find(
+          (record) => record.requestId === health.headers.get("x-request-id"),
+        );
+        assert.equal(healthLog?.route, "/api/health");
+        assert.equal(healthLog?.status, 200);
         // The unauthenticated attempt also consumes one IP-based throttle slot.
         for (let i = 0; i < 8; i++)
           assert.equal((await request("/testnet/readiness")).status, 200);
@@ -208,10 +223,14 @@ test("PostgreSQL workspace, sessions and authorization", async (t) => {
         });
         assert.equal(saved.body.revision, 2);
         await app.close();
-        app = await createApp();
+        delete process.env.BUILD_REVISION;
+        app = await createApp({
+          requestLog: (record) => requestRecords.push(record),
+        });
         db = app.get(Database);
         await app.listen(0, "127.0.0.1");
         base = await app.getUrl();
+        assert.equal((await request("/health")).body.revision, "unknown");
         const persisted = await request(`/projects/${projectId}`);
         assert.equal(persisted.status, 200);
         assert.equal(persisted.body.draft.agreement.title, agreement.title);
@@ -412,5 +431,7 @@ test("PostgreSQL workspace, sessions and authorization", async (t) => {
     if (ids.length)
       await db.pool.query("DELETE FROM users WHERE id=ANY($1::uuid[])", [ids]);
     await app.close();
+    if (priorRevision === undefined) delete process.env.BUILD_REVISION;
+    else process.env.BUILD_REVISION = priorRevision;
   }
 });

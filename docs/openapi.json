@@ -11,6 +11,15 @@
     }
   ],
   "components": {
+    "headers": {
+      "RequestId": {
+        "description": "Server-generated correlation ID; caller IDs are ignored.",
+        "schema": {
+          "type": "string",
+          "format": "uuid"
+        }
+      }
+    },
     "securitySchemes": {
       "session": {
         "type": "apiKey",
@@ -701,28 +710,68 @@
                   }
                 }
               }
+            },
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
             }
           },
           "400": {
-            "description": "Invalid fields"
+            "description": "Invalid fields",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "401": {
-            "description": "Sign-in required"
+            "description": "Sign-in required",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "403": {
-            "description": "Origin/header or action forbidden"
+            "description": "Origin/header or action forbidden",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "404": {
-            "description": "Record not found or not accessible"
+            "description": "Record not found or not accessible",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "409": {
-            "description": "Stale version/draft, locked terms or duplicate account"
+            "description": "Stale version/draft, locked terms or duplicate account",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "429": {
-            "description": "Too many requests"
+            "description": "Too many requests",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "503": {
-            "description": "Testnet configuration, network or contract verification unavailable"
+            "description": "Testnet configuration, network or contract verification unavailable",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           }
         }
       }
@@ -756,28 +805,68 @@
                   "description": "canAct boolean and submissions ordered newest first; see docs/WORK-REVIEW.md"
                 }
               }
+            },
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
             }
           },
           "400": {
-            "description": "Invalid fields"
+            "description": "Invalid fields",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "401": {
-            "description": "Sign-in required"
+            "description": "Sign-in required",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "403": {
-            "description": "Origin/header or action forbidden"
+            "description": "Origin/header or action forbidden",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "404": {
-            "description": "Record not found or not accessible"
+            "description": "Record not found or not accessible",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "409": {
-            "description": "Stale version/draft, locked terms or duplicate account"
+            "description": "Stale version/draft, locked terms or duplicate account",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "429": {
-            "description": "Too many requests"
+            "description": "Too many requests",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "503": {
-            "description": "Testnet configuration, network or contract verification unavailable"
+            "description": "Testnet configuration, network or contract verification unavailable",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           }
         }
       }
@@ -845,28 +934,68 @@
                   }
                 }
               }
+            },
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
             }
           },
           "400": {
-            "description": "Invalid fields"
+            "description": "Invalid fields",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "401": {
-            "description": "Sign-in required"
+            "description": "Sign-in required",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "403": {
-            "description": "Origin/header or action forbidden"
+            "description": "Origin/header or action forbidden",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "404": {
-            "description": "Record not found or not accessible"
+            "description": "Record not found or not accessible",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "409": {
-            "description": "Stale version/draft, locked terms or duplicate account"
+            "description": "Stale version/draft, locked terms or duplicate account",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "429": {
-            "description": "Too many requests"
+            "description": "Too many requests",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "503": {
-            "description": "Testnet configuration, network or contract verification unavailable"
+            "description": "Testnet configuration, network or contract verification unavailable",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           }
         }
       }
@@ -936,28 +1065,68 @@
                   }
                 }
               }
+            },
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
             }
           },
           "400": {
-            "description": "Invalid fields"
+            "description": "Invalid fields",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "401": {
-            "description": "Sign-in required"
+            "description": "Sign-in required",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "403": {
-            "description": "Origin/header or action forbidden"
+            "description": "Origin/header or action forbidden",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "404": {
-            "description": "Record not found or not accessible"
+            "description": "Record not found or not accessible",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "409": {
-            "description": "Stale version/draft, locked terms or duplicate account"
+            "description": "Stale version/draft, locked terms or duplicate account",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "429": {
-            "description": "Too many requests"
+            "description": "Too many requests",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "503": {
-            "description": "Testnet configuration, network or contract verification unavailable"
+            "description": "Testnet configuration, network or contract verification unavailable",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           }
         }
       }
@@ -993,28 +1162,68 @@
                   }
                 }
               }
+            },
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
             }
           },
           "400": {
-            "description": "Invalid fields"
+            "description": "Invalid fields",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "401": {
-            "description": "Sign-in required"
+            "description": "Sign-in required",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "403": {
-            "description": "Origin/header or action forbidden"
+            "description": "Origin/header or action forbidden",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "404": {
-            "description": "Record not found or not accessible"
+            "description": "Record not found or not accessible",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "409": {
-            "description": "Stale version/draft, locked terms or duplicate account"
+            "description": "Stale version/draft, locked terms or duplicate account",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "429": {
-            "description": "Too many requests"
+            "description": "Too many requests",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "503": {
-            "description": "Testnet configuration, network or contract verification unavailable"
+            "description": "Testnet configuration, network or contract verification unavailable",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           }
         }
       }
@@ -1076,28 +1285,68 @@
                   }
                 }
               }
+            },
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
             }
           },
           "400": {
-            "description": "Invalid fields"
+            "description": "Invalid fields",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "401": {
-            "description": "Sign-in required"
+            "description": "Sign-in required",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "403": {
-            "description": "Origin/header or action forbidden"
+            "description": "Origin/header or action forbidden",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "404": {
-            "description": "Record not found or not accessible"
+            "description": "Record not found or not accessible",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "409": {
-            "description": "Stale version/draft, locked terms or duplicate account"
+            "description": "Stale version/draft, locked terms or duplicate account",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "429": {
-            "description": "Too many requests"
+            "description": "Too many requests",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "503": {
-            "description": "Testnet configuration, network or contract verification unavailable"
+            "description": "Testnet configuration, network or contract verification unavailable",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           }
         }
       }
@@ -1153,28 +1402,68 @@
                   }
                 }
               }
+            },
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
             }
           },
           "400": {
-            "description": "Invalid fields"
+            "description": "Invalid fields",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "401": {
-            "description": "Sign-in required"
+            "description": "Sign-in required",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "403": {
-            "description": "Origin/header or action forbidden"
+            "description": "Origin/header or action forbidden",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "404": {
-            "description": "Record not found or not accessible"
+            "description": "Record not found or not accessible",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "409": {
-            "description": "Stale version/draft, locked terms or duplicate account"
+            "description": "Stale version/draft, locked terms or duplicate account",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "429": {
-            "description": "Too many requests"
+            "description": "Too many requests",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "503": {
-            "description": "Testnet configuration, network or contract verification unavailable"
+            "description": "Testnet configuration, network or contract verification unavailable",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           }
         }
       }
@@ -1208,28 +1497,68 @@
                   "description": "See docs/API.md and TESTNET.md; escrow may be null and chain state may be unverified."
                 }
               }
+            },
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
             }
           },
           "400": {
-            "description": "Invalid fields"
+            "description": "Invalid fields",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "401": {
-            "description": "Sign-in required"
+            "description": "Sign-in required",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "403": {
-            "description": "Origin/header or action forbidden"
+            "description": "Origin/header or action forbidden",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "404": {
-            "description": "Record not found or not accessible"
+            "description": "Record not found or not accessible",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "409": {
-            "description": "Stale version/draft, locked terms or duplicate account"
+            "description": "Stale version/draft, locked terms or duplicate account",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "429": {
-            "description": "Too many requests"
+            "description": "Too many requests",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "503": {
-            "description": "Testnet configuration, network or contract verification unavailable"
+            "description": "Testnet configuration, network or contract verification unavailable",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           }
         }
       }
@@ -1314,28 +1643,68 @@
                   }
                 }
               }
+            },
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
             }
           },
           "400": {
-            "description": "Invalid fields"
+            "description": "Invalid fields",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "401": {
-            "description": "Sign-in required"
+            "description": "Sign-in required",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "403": {
-            "description": "Origin/header or action forbidden"
+            "description": "Origin/header or action forbidden",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "404": {
-            "description": "Record not found or not accessible"
+            "description": "Record not found or not accessible",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "409": {
-            "description": "Stale version/draft, locked terms or duplicate account"
+            "description": "Stale version/draft, locked terms or duplicate account",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "429": {
-            "description": "Too many requests"
+            "description": "Too many requests",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "503": {
-            "description": "Testnet configuration, network or contract verification unavailable"
+            "description": "Testnet configuration, network or contract verification unavailable",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           }
         }
       }
@@ -1408,28 +1777,68 @@
                   }
                 }
               }
+            },
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
             }
           },
           "400": {
-            "description": "Invalid fields"
+            "description": "Invalid fields",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "401": {
-            "description": "Sign-in required"
+            "description": "Sign-in required",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "403": {
-            "description": "Origin/header or action forbidden"
+            "description": "Origin/header or action forbidden",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "404": {
-            "description": "Record not found or not accessible"
+            "description": "Record not found or not accessible",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "409": {
-            "description": "Stale version/draft, locked terms or duplicate account"
+            "description": "Stale version/draft, locked terms or duplicate account",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "429": {
-            "description": "Too many requests"
+            "description": "Too many requests",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "503": {
-            "description": "Testnet configuration, network or contract verification unavailable"
+            "description": "Testnet configuration, network or contract verification unavailable",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           }
         }
       }
@@ -1482,28 +1891,68 @@
                   "description": "Same shape as GET /testnet/projects/{id}."
                 }
               }
+            },
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
             }
           },
           "400": {
-            "description": "Invalid fields"
+            "description": "Invalid fields",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "401": {
-            "description": "Sign-in required"
+            "description": "Sign-in required",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "403": {
-            "description": "Origin/header or action forbidden"
+            "description": "Origin/header or action forbidden",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "404": {
-            "description": "Record not found or not accessible"
+            "description": "Record not found or not accessible",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "409": {
-            "description": "Stale version/draft, locked terms or duplicate account"
+            "description": "Stale version/draft, locked terms or duplicate account",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "429": {
-            "description": "Too many requests"
+            "description": "Too many requests",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "503": {
-            "description": "Testnet configuration, network or contract verification unavailable"
+            "description": "Testnet configuration, network or contract verification unavailable",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           }
         }
       }
@@ -1525,32 +1974,77 @@
                     },
                     "payments": {
                       "const": "disabled"
+                    },
+                    "revision": {
+                      "type": "string",
+                      "pattern": "^(unknown|[0-9a-f]{40})$",
+                      "description": "Explicitly configured source commit SHA, or unknown. Not an attestation."
                     }
                   }
                 }
               }
+            },
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
             }
           },
           "400": {
-            "description": "Invalid fields"
+            "description": "Invalid fields",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "401": {
-            "description": "Sign-in required"
+            "description": "Sign-in required",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "403": {
-            "description": "Origin/header or action forbidden"
+            "description": "Origin/header or action forbidden",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "404": {
-            "description": "Record not found or not accessible"
+            "description": "Record not found or not accessible",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "409": {
-            "description": "Stale version/draft, locked terms or duplicate account"
+            "description": "Stale version/draft, locked terms or duplicate account",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "429": {
-            "description": "Too many requests"
+            "description": "Too many requests",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "503": {
-            "description": "Testnet configuration, network or contract verification unavailable"
+            "description": "Testnet configuration, network or contract verification unavailable",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           }
         }
       }
@@ -1602,28 +2096,68 @@
                   }
                 }
               }
+            },
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
             }
           },
           "400": {
-            "description": "Invalid fields"
+            "description": "Invalid fields",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "401": {
-            "description": "Sign-in required"
+            "description": "Sign-in required",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "403": {
-            "description": "Origin/header or action forbidden"
+            "description": "Origin/header or action forbidden",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "404": {
-            "description": "Record not found or not accessible"
+            "description": "Record not found or not accessible",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "409": {
-            "description": "Stale version/draft, locked terms or duplicate account"
+            "description": "Stale version/draft, locked terms or duplicate account",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "429": {
-            "description": "Too many requests"
+            "description": "Too many requests",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "503": {
-            "description": "Testnet configuration, network or contract verification unavailable"
+            "description": "Testnet configuration, network or contract verification unavailable",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           }
         }
       }
@@ -1675,28 +2209,68 @@
                   }
                 }
               }
+            },
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
             }
           },
           "400": {
-            "description": "Invalid fields"
+            "description": "Invalid fields",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "401": {
-            "description": "Sign-in required"
+            "description": "Sign-in required",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "403": {
-            "description": "Origin/header or action forbidden"
+            "description": "Origin/header or action forbidden",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "404": {
-            "description": "Record not found or not accessible"
+            "description": "Record not found or not accessible",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "409": {
-            "description": "Stale version/draft, locked terms or duplicate account"
+            "description": "Stale version/draft, locked terms or duplicate account",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "429": {
-            "description": "Too many requests"
+            "description": "Too many requests",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "503": {
-            "description": "Testnet configuration, network or contract verification unavailable"
+            "description": "Testnet configuration, network or contract verification unavailable",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           }
         }
       }
@@ -1738,28 +2312,68 @@
                   }
                 }
               }
+            },
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
             }
           },
           "400": {
-            "description": "Invalid fields"
+            "description": "Invalid fields",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "401": {
-            "description": "Sign-in required"
+            "description": "Sign-in required",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "403": {
-            "description": "Origin/header or action forbidden"
+            "description": "Origin/header or action forbidden",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "404": {
-            "description": "Record not found or not accessible"
+            "description": "Record not found or not accessible",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "409": {
-            "description": "Stale version/draft, locked terms or duplicate account"
+            "description": "Stale version/draft, locked terms or duplicate account",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "429": {
-            "description": "Too many requests"
+            "description": "Too many requests",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "503": {
-            "description": "Testnet configuration, network or contract verification unavailable"
+            "description": "Testnet configuration, network or contract verification unavailable",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           }
         }
       }
@@ -1786,28 +2400,68 @@
                   }
                 }
               }
+            },
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
             }
           },
           "400": {
-            "description": "Invalid fields"
+            "description": "Invalid fields",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "401": {
-            "description": "Sign-in required"
+            "description": "Sign-in required",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "403": {
-            "description": "Origin/header or action forbidden"
+            "description": "Origin/header or action forbidden",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "404": {
-            "description": "Record not found or not accessible"
+            "description": "Record not found or not accessible",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "409": {
-            "description": "Stale version/draft, locked terms or duplicate account"
+            "description": "Stale version/draft, locked terms or duplicate account",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "429": {
-            "description": "Too many requests"
+            "description": "Too many requests",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "503": {
-            "description": "Testnet configuration, network or contract verification unavailable"
+            "description": "Testnet configuration, network or contract verification unavailable",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           }
         }
       }
@@ -1869,28 +2523,68 @@
                   }
                 }
               }
+            },
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
             }
           },
           "400": {
-            "description": "Invalid fields"
+            "description": "Invalid fields",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "401": {
-            "description": "Sign-in required"
+            "description": "Sign-in required",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "403": {
-            "description": "Origin/header or action forbidden"
+            "description": "Origin/header or action forbidden",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "404": {
-            "description": "Record not found or not accessible"
+            "description": "Record not found or not accessible",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "409": {
-            "description": "Stale version/draft, locked terms or duplicate account"
+            "description": "Stale version/draft, locked terms or duplicate account",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "429": {
-            "description": "Too many requests"
+            "description": "Too many requests",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "503": {
-            "description": "Testnet configuration, network or contract verification unavailable"
+            "description": "Testnet configuration, network or contract verification unavailable",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           }
         }
       },
@@ -1945,28 +2639,68 @@
                   }
                 }
               }
+            },
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
             }
           },
           "400": {
-            "description": "Invalid fields"
+            "description": "Invalid fields",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "401": {
-            "description": "Sign-in required"
+            "description": "Sign-in required",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "403": {
-            "description": "Origin/header or action forbidden"
+            "description": "Origin/header or action forbidden",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "404": {
-            "description": "Record not found or not accessible"
+            "description": "Record not found or not accessible",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "409": {
-            "description": "Stale version/draft, locked terms or duplicate account"
+            "description": "Stale version/draft, locked terms or duplicate account",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "429": {
-            "description": "Too many requests"
+            "description": "Too many requests",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "503": {
-            "description": "Testnet configuration, network or contract verification unavailable"
+            "description": "Testnet configuration, network or contract verification unavailable",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           }
         }
       }
@@ -1999,28 +2733,68 @@
                   "$ref": "#/components/schemas/Project"
                 }
               }
+            },
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
             }
           },
           "400": {
-            "description": "Invalid fields"
+            "description": "Invalid fields",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "401": {
-            "description": "Sign-in required"
+            "description": "Sign-in required",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "403": {
-            "description": "Origin/header or action forbidden"
+            "description": "Origin/header or action forbidden",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "404": {
-            "description": "Record not found or not accessible"
+            "description": "Record not found or not accessible",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "409": {
-            "description": "Stale version/draft, locked terms or duplicate account"
+            "description": "Stale version/draft, locked terms or duplicate account",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "429": {
-            "description": "Too many requests"
+            "description": "Too many requests",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "503": {
-            "description": "Testnet configuration, network or contract verification unavailable"
+            "description": "Testnet configuration, network or contract verification unavailable",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           }
         }
       }
@@ -2087,28 +2861,68 @@
                   }
                 }
               }
+            },
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
             }
           },
           "400": {
-            "description": "Invalid fields"
+            "description": "Invalid fields",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "401": {
-            "description": "Sign-in required"
+            "description": "Sign-in required",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "403": {
-            "description": "Origin/header or action forbidden"
+            "description": "Origin/header or action forbidden",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "404": {
-            "description": "Record not found or not accessible"
+            "description": "Record not found or not accessible",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "409": {
-            "description": "Stale version/draft, locked terms or duplicate account"
+            "description": "Stale version/draft, locked terms or duplicate account",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "429": {
-            "description": "Too many requests"
+            "description": "Too many requests",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "503": {
-            "description": "Testnet configuration, network or contract verification unavailable"
+            "description": "Testnet configuration, network or contract verification unavailable",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           }
         }
       }
@@ -2175,28 +2989,68 @@
                   }
                 }
               }
+            },
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
             }
           },
           "400": {
-            "description": "Invalid fields"
+            "description": "Invalid fields",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "401": {
-            "description": "Sign-in required"
+            "description": "Sign-in required",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "403": {
-            "description": "Origin/header or action forbidden"
+            "description": "Origin/header or action forbidden",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "404": {
-            "description": "Record not found or not accessible"
+            "description": "Record not found or not accessible",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "409": {
-            "description": "Stale version/draft, locked terms or duplicate account"
+            "description": "Stale version/draft, locked terms or duplicate account",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "429": {
-            "description": "Too many requests"
+            "description": "Too many requests",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "503": {
-            "description": "Testnet configuration, network or contract verification unavailable"
+            "description": "Testnet configuration, network or contract verification unavailable",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           }
         }
       }
@@ -2269,28 +3123,68 @@
                   }
                 }
               }
+            },
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
             }
           },
           "400": {
-            "description": "Invalid fields"
+            "description": "Invalid fields",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "401": {
-            "description": "Sign-in required"
+            "description": "Sign-in required",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "403": {
-            "description": "Origin/header or action forbidden"
+            "description": "Origin/header or action forbidden",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "404": {
-            "description": "Record not found or not accessible"
+            "description": "Record not found or not accessible",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "409": {
-            "description": "Stale version/draft, locked terms or duplicate account"
+            "description": "Stale version/draft, locked terms or duplicate account",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "429": {
-            "description": "Too many requests"
+            "description": "Too many requests",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "503": {
-            "description": "Testnet configuration, network or contract verification unavailable"
+            "description": "Testnet configuration, network or contract verification unavailable",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           }
         }
       }

@@ -5,20 +5,29 @@ import { ThrottlerGuard, ThrottlerModule } from "@nestjs/throttler";
 import cookieParser from "cookie-parser";
 import helmet from "helmet";
 import { json, Request, Response, NextFunction } from "express";
+import { BuildMetadata, parseBuildRevision } from "./build-metadata";
 import { Database } from "./database";
 import { AuthController, SessionGuard } from "./auth";
 import { ProjectsController } from "./projects";
 import { TestnetController } from "./testnet";
 import { WorkController } from "./work";
 import { Stellar } from "./stellar";
+import { requestMetadata, RequestRecord } from "./request-metadata";
 import { ReadinessController, TestnetReadiness } from "./readiness";
 
 @Controller("health")
 class HealthController {
-  constructor(private readonly db: Database) {}
+  constructor(
+    private readonly db: Database,
+    private readonly build: BuildMetadata,
+  ) {}
   @Get() async get() {
     await this.db.pool.query("SELECT 1");
-    return { status: "ok", payments: "disabled" };
+    return {
+      status: "ok",
+      payments: "disabled",
+      revision: this.build.revision,
+    };
   }
 }
 @Module({
@@ -32,6 +41,7 @@ class HealthController {
     ReadinessController,
   ],
   providers: [
+    BuildMetadata,
     Database,
     Stellar,
     TestnetReadiness,
@@ -41,7 +51,10 @@ class HealthController {
 })
 class AppModule {}
 
-export async function createApp() {
+export async function createApp(
+  options: { requestLog?: (record: RequestRecord) => void } = {},
+) {
+  parseBuildRevision(process.env.BUILD_REVISION);
   const origin = process.env.FRONTEND_ORIGIN;
   if (!origin || new URL(origin).origin !== origin)
     throw new Error("FRONTEND_ORIGIN must be an exact origin");
@@ -52,6 +65,7 @@ export async function createApp() {
     logger: ["error", "warn"],
   });
   app.setGlobalPrefix("api");
+  app.use(requestMetadata(options.requestLog));
   app.use(helmet());
   app.use((req: Request, res: Response, next: NextFunction) => {
     res.setHeader("Cache-Control", "no-store");

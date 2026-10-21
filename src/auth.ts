@@ -78,7 +78,6 @@ export class AuthController {
         await client.query("DELETE FROM sessions WHERE token_hash=$1", [
           digest(req.cookies[cookieName]),
         ]);
-      await client.query("DELETE FROM sessions WHERE expires_at<=now()");
       await client.query(
         "INSERT INTO sessions(token_hash,user_id,expires_at) VALUES($1,$2,now()+interval '7 days')",
         [digest(token), user.id],

@@ -12,6 +12,7 @@
     "docs:api": "npm run build && node dist/src/openapi.js",
     "start": "node --env-file=.env dist/src/main.js",
     "dev": "npm run build && npm start",
+    "db:cleanup-sessions": "npm run build && node --env-file=.env dist/src/session-cleanup.js",
     "db:local": "node scripts/local-db.mjs",
     "db:migrate": "npm run build && node --env-file=.env dist/src/migrate.js",
     "test": "npm run build && node --env-file=.env.test --test dist/test/*.test.js",

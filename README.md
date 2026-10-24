@@ -94,3 +94,27 @@ The authenticated [readiness diagnostic](docs/READINESS.md) checks network and p
 ## Hosted testnet demo
 
 See [Vercel + Render deployment](docs/HOSTING.md). `render.yaml` defines a temporary free API/database setup; `npm run start:hosted` applies migrations and starts from provider environment variables. No hosted resources are created by committing these files.
+
+### Database request limits and session maintenance
+
+Application transactions set PostgreSQL `statement_timeout` to 10,000 ms and
+`lock_timeout` to 2,000 ms using transaction-local settings. Override them with
+positive integer `DB_STATEMENT_TIMEOUT_MS` and `DB_LOCK_TIMEOUT_MS` values. These
+limits apply per statement/lock wait, not to the entire HTTP request. Migrations
+explicitly opt out and retain the database's own limits. Queries outside
+`Database.transaction()` retain the database defaults.
+
+A canceled statement aborts its transaction; rollback is attempted before the
+connection is released. A failed rollback discards the connection and preserves
+the original error. No write is automatically retried. A connection failure during
+COMMIT can have an unknown outcome: inspect current state before repeating a write.
+
+Expired sessions are rejected immediately by authentication, but physical cleanup
+is operator-run, outside login/rotation. Run `npm run db:cleanup-sessions` against
+the intended environment (or run `node dist/src/session-cleanup.js` with injected
+environment variables). Each invocation removes at most 500 expired sessions;
+`SESSION_CLEANUP_BATCH` accepts 1–5000. Schedule one invocation periodically to
+match traffic; it never loops through the entire backlog. Concurrent invocations
+skip locked candidates. Cleanup failures do not affect login, logout, or rotation.
+The existing expiry index supports candidate selection. Validate changes only
+against an isolated database ending in `_test` using `npm test`.

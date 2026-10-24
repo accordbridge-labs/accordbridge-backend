@@ -10,7 +10,7 @@
 | Wallet | User signing | The application may collect seed phrases |
 | Resolver service | Evidence assessment and authorized settlement decisions | Reviewer assignment in the database changes on-chain roles |
 
-Frontend hosting is intended to use Vercel. A local NestJS/TypeScript API and PostgreSQL workspace now exist; backend hosting remains undecided. Verify hosting-plan compatibility with private organization repositories before deployment.
+The hosted Testnet demo uses Vercel for the frontend, a Render web service for the NestJS/TypeScript API, and Neon PostgreSQL; see [the deployment guide](HOSTING.md). The local PostgreSQL workspace remains available for development and isolated tests. This provider selection is demo infrastructure, not a production architecture guarantee.
 
 ## Proposed records
 

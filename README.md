@@ -93,7 +93,7 @@ The authenticated [readiness diagnostic](docs/READINESS.md) checks network and p
 
 ## Hosted testnet demo
 
-See [Vercel + Render deployment](docs/HOSTING.md). `render.yaml` defines a temporary free API/database setup; `npm run start:hosted` applies migrations and starts from provider environment variables. No hosted resources are created by committing these files.
+See [Vercel + Render + Neon deployment](docs/HOSTING.md). `render.yaml` defines the free Render API and prompts the operator for an external PostgreSQL secret; the guide documents the hosted demo's Neon Free database. `npm run start:hosted` applies migrations and starts from provider environment variables. Committing these files does not create, migrate, switch, or delete hosted resources.
 
 ### Database request limits and session maintenance
 

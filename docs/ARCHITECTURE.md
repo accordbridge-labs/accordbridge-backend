@@ -20,6 +20,8 @@ Every escrow reference must include the network, contract ID, verified asset ide
 
 ## Interface contracts to define
 
+The proposed shared schemas, transaction states, idempotency and recovery rules are in [INTERFACES.md](INTERFACES.md).
+
 The implemented account/project API is described in [OpenAPI](openapi.json) and [API notes](API.md). Transaction intents, chain status, errors and event schemas for payments remain to be specified. The current API has no payment endpoints.
 
 Financial intents must identify actor, project/milestone, expected agreement version, network, asset, gross amount, fees, recipient/contract, and an idempotency identifier. Reconcile unknown transaction outcomes before retrying. Reject stale agreement versions and network/asset mismatches.

@@ -6,7 +6,7 @@ Organization and documentation setup only. No application implementation, contra
 
 ## Phases
 
-1. **Specification:** resolve financial and dispute policy; define component interfaces. Exit: each material success/failure case has a defined actor, state transition, and authority.
+1. **Specification:** resolve financial and dispute policy ([POLICY.md](POLICY.md)); define component interfaces ([INTERFACES.md](INTERFACES.md)). Exit: each material success/failure case has a defined actor, state transition, and authority.
 2. **Prototype:** design six end-to-end synthetic-data flows. Exit: clients and freelancers understand agreement, funding and next action without coaching.
 3. **Escrow evaluation:** verify source, tests, audit scope, deployed version, fee behaviour, and authority. Exit: a documented provider/custom-build decision and reproducible evidence.
 4. **Testnet implementation:** complete account-to-settlement workflow. Exit: meaningful tests for permissions, accounting, retries, disputes, refunds and recovery.

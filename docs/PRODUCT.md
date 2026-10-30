@@ -46,6 +46,8 @@ The blockchain records and enforces authorized actions; it cannot assess subject
 
 ## Open decisions
 
+Proposed resolutions, kept separate from agreed requirements, are in [POLICY.md](POLICY.md); they await owner and legal review.
+
 Revision timing; cancellation response period; reviewer replacement; appeals and finality; dispute fees; platform fees and refund subsidies; launch jurisdictions; identity requirements; evidence retention/deletion; wallet recovery; licenses; provider selection; transaction signing roles.
 
 ## Validation

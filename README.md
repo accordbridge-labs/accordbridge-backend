@@ -1,6 +1,7 @@
 # AccordBridge Backend
 
 [![Backend checks](https://github.com/accordbridge-labs/accordbridge-backend/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/accordbridge-labs/accordbridge-backend/actions/workflows/ci.yml)
+[![Dependency advisories](https://github.com/accordbridge-labs/accordbridge-backend/actions/workflows/dependency-advisories.yml/badge.svg?branch=main)](https://github.com/accordbridge-labs/accordbridge-backend/actions/workflows/dependency-advisories.yml)
 
 **The off-chain API behind AccordBridge.**
 
@@ -178,6 +179,7 @@ CI runs the PostgreSQL integration suite and checks generated OpenAPI documentat
 - [Testnet setup and limitations](docs/TESTNET.md)
 - [Work delivery and review](docs/WORK-REVIEW.md)
 - [Hosting guide](docs/HOSTING.md)
+- [Dependency advisories and triage](docs/DEPENDENCY-ADVISORIES.md)
 - [Contribution guide](https://github.com/accordbridge-labs/.github/blob/main/docs/START-HERE.md)
 - Related repositories: [frontend](https://github.com/accordbridge-labs/accordbridge-frontend) · [contracts](https://github.com/accordbridge-labs/accordbridge-contracts)
 

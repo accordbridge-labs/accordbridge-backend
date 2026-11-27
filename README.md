@@ -11,16 +11,37 @@ AccordBridge Backend powers the freelancer–client workspace. Built with NestJS
 
 ## Contents
 
+- [Scope and boundaries](#scope-and-boundaries)
 - [Core Features](#core-features)
+- [Rules the design keeps](#the-rules-the-design-keeps)
 - [Project Structure](#project-structure)
 - [Getting Started](#getting-started)
 - [Environment Setup](#environment-setup)
 - [API Modules](#api-modules)
 - [Off-Chain State Model](#off-chain-state-model)
 - [Security and Prototype Boundaries](#security-and-prototype-boundaries)
+- [Verification status](#verification-status)
 - [Tests and CI](#tests-and-ci)
+- [Before real value](#before-real-value)
 - [Documentation](#documentation)
 - [License](#license)
+
+## Scope and boundaries
+
+This service is the off-chain authority for the workspace. It never holds
+escrow funds or participant keys, and it never decides settlement by itself.
+The Soroban contracts hold tokens and enforce authorization; the frontend owns
+presentation and explicit wallet prompts.
+
+| Area | This service does | This service does not |
+| --- | --- | --- |
+| Identity and access | Sessions, password hashing, project membership, participant-scoped reads and writes. | Verify email identity, invite users, or provide account recovery. |
+| Workflow state | Private drafts, immutable agreement versions, version-specific acceptance, delivery and review history. | Store uploaded files or fetch delivery links. |
+| Testnet escrow | Verify wallet ownership challenges, prepare unsigned transactions, persist intents, submit signed transactions, reconcile chain state and balances. | Hold wallet keys, sign for a participant, or arbitrate a dispute. |
+| Operations | Migrations, health and read-only readiness diagnostics, rate limits, request IDs, generated OpenAPI. | Guarantee continuous background processing on a sleeping free-tier host. |
+
+The chain is authoritative for whether funds moved. An HTTP success, an
+accepted agreement or an approved submission is not proof of settlement.
 
 ## Core Features
 
@@ -32,6 +53,21 @@ AccordBridge Backend powers the freelancer–client workspace. Built with NestJS
 - **Operational controls:** PostgreSQL migrations, request metadata, rate limits, health and readiness endpoints, and a generated OpenAPI contract.
 
 Mainnet payments, private file uploads, verified email, password recovery, invitations, and dispute case management are not implemented service guarantees. See the [product specification](docs/PRODUCT.md) and [roadmap](docs/ROADMAP.md) for scope and planned work.
+
+## The rules the design keeps
+
+These rules are enforced in code and pinned by tests, so they survive
+refactoring.
+
+| Rule | Where it lives | How it is pinned |
+| --- | --- | --- |
+| The chain decides whether funds moved. | `testnet.ts` and `stellar.ts` verify network, code, terms and balance before reporting settlement. | Integration tests use synthetic RPC state; an HTTP success alone never marks a transfer confirmed. |
+| An unknown outcome stays unknown. | Transaction intents persist `prepared`/`submitted` state and are reconciled by reading the existing hash. | Tests cover restart recovery, duplicate runs and RPC failure without resubmitting a payment. |
+| Participant keys stay with the participant. | The API builds unsigned XDR; signed envelopes are submitted but not stored by the runtime. | Build/transaction tests assert no signing key is required by the service. |
+| Membership is checked before data is returned. | `projects.ts` guards every project route with session identity and fixed membership. | Authorization tests cover cross-participant access and private drafts. |
+| Stale writes fail with a conflict. | Expected version and draft revision are checked inside PostgreSQL transactions. | Concurrency and stale-version tests are part of the 28-test suite. |
+| The API schema is generated. | `docs/openapi.json` is produced from the running routes. | CI runs `npm run docs:api` and fails on a `git diff` drift. |
+| Background work is bounded and restart-safe. | Session cleanup runs as an operator command with a capped batch. | Tests validate the bounded cleanup path against an isolated `_test` database. |
 
 ## Project Structure
 
@@ -160,6 +196,22 @@ The testnet contract supports the first milestone only. App-managed release requ
 
 Production security, operational recovery, and mainnet behavior have not been validated. See [hosting notes](docs/HOSTING.md) before deploying the prototype.
 
+## Verification status
+
+| Check | Result on `main` (27 Nov 2026) | What it establishes |
+| --- | --- | --- |
+| `npm test` with isolated PostgreSQL | 28 passed | Sessions, access control, versioned agreements, work review, intents and reconciliation with synthetic chain data. |
+| `npm run build` | Passed | Strict TypeScript build. |
+| `npm run docs:api` + drift check | No OpenAPI drift | The committed schema matches the routes. |
+| `npm audit --json` | 0 advisories | Lockfile advisory scan; not an audit. |
+| [App CI](https://github.com/accordbridge-labs/accordbridge-backend/actions/runs/46078221210) · [Advisory CI](https://github.com/accordbridge-labs/accordbridge-backend/actions/runs/46078221202) | Passed | Post-merge checks on the Apache-2.0 commits. |
+| Hosted HTTP/browser preflight (18 Oct 2026) | Limited pass | Public rendering, auth boundaries, cookies, separate sessions, agreement persistence and authenticated readiness. No wallets or tokens. |
+| Hosted two-participant Freighter run | **NOT RUN** | No live wallet signature or real chain settlement has been verified through the hosted app. |
+
+Integration tests use a dedicated PostgreSQL cluster and synthetic chain
+observations. They are not live Testnet writes, not a security audit, and not
+proof of hosted wallet acceptance.
+
 ## Tests and CI
 
 ```sh
@@ -171,6 +223,19 @@ npm run format:check
 Tests use `.env.test` and require a database whose name ends in `_test`. They apply migrations and create/remove isolated fixtures; never point tests at customer data. Coverage includes authentication, access controls, stale draft/version handling, concurrent writes, work review, and testnet intent/reconciliation behavior.
 
 CI runs the PostgreSQL integration suite and checks generated OpenAPI documentation for drift. Optional testnet smoke tests broadcast transactions and require the sibling contracts' test fixtures; see [testnet test instructions](docs/TESTNET.md#evidence-and-checks). Browser wallet acceptance is a separate manual check.
+
+## Before real value
+
+Real-money escrow would need a reviewed authority and dispute model, an audit
+of the exact deployed contract, a real asset and mainnet configuration, shared
+rate limiting and caches across instances, continuous reconciliation, monitoring,
+incident response, tested backups, and legal/compliance decisions. These are
+future gates, not shipped guarantees of this service. See the
+[production escrow roadmap](https://github.com/accordbridge-labs/accordbridge-contracts/blob/main/docs/PRODUCTION-ESCROW-ROADMAP.md)
+and [testnet limits](docs/TESTNET.md).
+
+Do not describe a generated API schema, a mocked RPC test or a clean advisory
+scan as proof of payment, an audit, or an audited production deployment.
 
 ## Documentation
 

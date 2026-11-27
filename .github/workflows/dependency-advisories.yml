@@ -1,0 +1,37 @@
+name: Dependency advisories
+
+# Separate, least-privilege scan of the committed lockfile. It never runs
+# application setup, tests, dev servers, wallet flows or deployments, and it
+# receives no secrets. See docs/DEPENDENCY-ADVISORIES.md for triage rules.
+on:
+  pull_request:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "17 6 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  npm-advisories:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Pin scanner version
+        run: npm install -g npm@10.9.9
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Query advisory database (network; no application side effects)
+        run: |
+          set +e
+          npm audit --json > audit.json
+          set -e
+      - name: Classify findings
+        run: node scripts/check-audit-json.mjs audit.json

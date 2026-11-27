@@ -193,4 +193,4 @@ Expired sessions are rejected immediately by authentication, but physical cleanu
 
 ## License
 
-Licensed under the [MIT License](LICENSE). Third-party dependencies retain their own licenses and notices.
+Licensed under the [Apache License 2.0](LICENSE) with the attribution notices in [NOTICE](NOTICE). Third-party dependencies retain their own licenses and notices.
